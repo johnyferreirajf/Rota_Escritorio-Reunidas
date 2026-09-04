@@ -143,8 +143,174 @@ html,body{
 .pin.end{background:#10263a}
 .pin.done{background:#7e8d97}
 
-@media(max-width:600px){.metric{display:none}}
+
+@media(max-width:600px){
+  .top{
+    top:6px;left:6px;right:6px;
+    gap:4px
+  }
+
+  .card{
+    padding:6px 8px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.20)
+  }
+
+  .title{
+    font-size:12px;
+    line-height:1.1
+  }
+
+  .sub{
+    font-size:9px;
+    margin-top:2px;
+    max-width:70vw
+  }
+
+  .metric{
+    display:none
+  }
+
+  .tools{
+    right:7px;
+    top:68px;
+    gap:5px
+  }
+
+  .fab{
+    width:38px;
+    height:38px;
+    border-radius:10px;
+    font-size:19px;
+    box-shadow:0 2px 10px rgba(0,0,0,.20)
+  }
+
+  .bottom{
+    left:6px;
+    right:6px;
+    bottom:6px;
+    padding:7px;
+    border-radius:12px;
+    max-height:34vh;
+    overflow-y:auto;
+    box-shadow:0 2px 12px rgba(0,0,0,.24)
+  }
+
+  .mode{
+    gap:4px;
+    margin-bottom:5px
+  }
+
+  .mode button{
+    min-height:30px;
+    border-radius:8px;
+    font-size:10px;
+    padding:2px 4px
+  }
+
+  .route-seq{
+    display:none
+  }
+
+  .schedule{
+    margin-bottom:5px;
+    border-radius:8px
+  }
+
+  .schedule summary{
+    padding:6px 7px;
+    font-size:9px
+  }
+
+  .schedule-arrival{
+    font-size:8px;
+    padding:2px 5px
+  }
+
+  .schedule-body{
+    padding:0 6px 5px
+  }
+
+  .schedule-row{
+    grid-template-columns:20px 1fr auto;
+    gap:4px;
+    padding:3px 0;
+    font-size:9px
+  }
+
+  .schedule-num{
+    width:18px;
+    height:18px;
+    font-size:8px
+  }
+
+  .schedule-time{
+    font-size:10px
+  }
+
+  .schedule-note{
+    display:none
+  }
+
+  .eyebrow{
+    font-size:8px;
+    letter-spacing:.05em
+  }
+
+  .next{
+    font-size:15px;
+    margin-top:0;
+    line-height:1.05
+  }
+
+  .nextmeta{
+    display:none
+  }
+
+  .actions{
+    gap:4px;
+    margin-top:6px
+  }
+
+  .btn{
+    min-height:34px;
+    border-radius:8px;
+    font-size:9px;
+    padding:2px 3px
+  }
+
+  .progress{
+    margin-top:4px;
+    font-size:8px
+  }
+
+  .gps-note{
+    display:none
+  }
+
+  .pin{
+    width:28px;
+    height:28px;
+    font-size:10px
+  }
+}
+
 @media(min-width:700px){.bottom{width:500px;right:auto}.top{max-width:760px}}
+
+@media(max-width:600px){
+  #panelToggle{
+    display:block!important
+  }
+
+  body.panel-collapsed .bottom{
+    display:none
+  }
+
+  body.panel-collapsed #panelToggle{
+    bottom:8px
+  }
+}
+
 </style>
 </head>
 
@@ -167,7 +333,26 @@ html,body{
   <button class="fab" id="fit">⤢</button>
 </div>
 
-<div class="bottom">
+
+<button id="panelToggle" aria-label="Mostrar ou ocultar informações"
+style="
+  position:fixed;
+  z-index:1002;
+  left:10px;
+  bottom:10px;
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:#102f4d;
+  color:#fff;
+  font-size:18px;
+  font-weight:bold;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+  display:none;
+">⌃</button>
+
+<div class="bottom" id="bottomPanel">
   <div class="mode">
     <button id="modeIda" class="active">IDA → Reunidas</button>
     <button id="modeVolta">VOLTA → Casas</button>
@@ -175,7 +360,7 @@ html,body{
 
   <div class="route-seq" id="routeSeq"></div>
 
-  <details class="schedule" id="scheduleBox" open>
+  <details class="schedule" id="scheduleBox">
     <summary>
       <span>Horários da IDA para chegar às 07:00</span>
       <span class="schedule-arrival">Chegada 07:00</span>
@@ -802,6 +987,17 @@ window.addEventListener("load",()=>{
 });
 window.addEventListener("resize",fixSize);
 window.addEventListener("orientationchange",()=>setTimeout(fixSize,400));
+
+
+const panelToggle=document.getElementById("panelToggle");
+if(panelToggle){
+  panelToggle.onclick=()=>{
+    document.body.classList.toggle("panel-collapsed");
+    panelToggle.textContent=
+      document.body.classList.contains("panel-collapsed") ? "⌃" : "⌄";
+    setTimeout(()=>map.invalidateSize(false),80);
+  };
+}
 
 rebuildMarkers();
 render();
