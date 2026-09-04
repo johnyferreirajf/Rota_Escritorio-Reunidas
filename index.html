@@ -14,16 +14,12 @@ html,body{
   overflow:hidden;background:#111;
   font-family:Arial,Helvetica,sans-serif
 }
-#map{
-  position:fixed;inset:0;width:100%;height:100%;
-  z-index:1;background:#111
-}
+#map{position:fixed;inset:0;width:100%;height:100%;z-index:1;background:#111}
 .leaflet-container{background:#111}
 .leaflet-tile{max-width:none!important;max-height:none!important}
 
 .top{
-  position:fixed;z-index:1000;
-  top:10px;left:10px;right:10px;
+  position:fixed;z-index:1000;top:10px;left:10px;right:10px;
   display:flex;gap:8px;pointer-events:none
 }
 .card{
@@ -42,51 +38,41 @@ html,body{
 .metric span{font-size:10px;color:#667480}
 
 .tools{
-  position:fixed;z-index:1000;
-  right:12px;top:105px;
+  position:fixed;z-index:1000;right:12px;top:105px;
   display:flex;flex-direction:column;gap:8px
 }
 .fab{
-  width:48px;height:48px;border:0;border-radius:14px;
-  background:#fff;color:#10263a;
-  box-shadow:0 4px 16px rgba(0,0,0,.25);
+  width:48px;height:48px;border:0;border-radius:14px;background:#fff;
+  color:#10263a;box-shadow:0 4px 16px rgba(0,0,0,.25);
   font-size:24px;font-weight:bold
 }
 
 .bottom{
-  position:fixed;z-index:1000;
-  left:10px;right:10px;bottom:10px;
-  background:rgba(255,255,255,.97);
-  border-radius:18px;padding:12px;
+  position:fixed;z-index:1000;left:10px;right:10px;bottom:10px;
+  background:rgba(255,255,255,.97);border-radius:18px;padding:12px;
   box-shadow:0 4px 20px rgba(0,0,0,.28)
 }
-
-.mode{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:7px;margin-bottom:9px
-}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
 .mode button{
   border:1px solid #ccd7df;background:#eef3f6;color:#29455c;
   border-radius:11px;min-height:39px;font-weight:800;font-size:12px
 }
-.mode button.active{
-  background:#102f4d;color:#fff;border-color:#102f4d
-}
+.mode button.active{background:#102f4d;color:#fff;border-color:#102f4d}
 
 .route-seq{
-  margin-bottom:8px;padding:7px 9px;
-  border-radius:10px;background:#eef4f8;
+  margin-bottom:8px;padding:7px 9px;border-radius:10px;background:#eef4f8;
   font-size:10px;line-height:1.35;color:#395369;
   white-space:nowrap;overflow-x:auto
 }
 .route-seq b{color:#10263a}
 
-.eyebrow{
-  font-size:10px;font-weight:bold;letter-spacing:.08em;color:#1769aa
+.ref-badge{
+  display:inline-block;margin-left:4px;padding:2px 6px;border-radius:999px;
+  background:#dff3e8;color:#176842;font-weight:800
 }
-.next{
-  font-size:20px;font-weight:800;color:#10263a;margin-top:2px
-}
+
+.eyebrow{font-size:10px;font-weight:bold;letter-spacing:.08em;color:#1769aa}
+.next{font-size:20px;font-weight:800;color:#10263a;margin-top:2px}
 .nextmeta{font-size:11px;color:#667480;margin-top:3px}
 
 .actions{
@@ -106,38 +92,23 @@ html,body{
   margin-top:8px;font-size:10px;color:#667480;
   display:flex;justify-content:space-between;gap:10px
 }
-.gps-note{
-  margin-top:5px;font-size:10px;line-height:1.3;color:#667480
-}
+.gps-note{margin-top:5px;font-size:10px;line-height:1.3;color:#667480}
 
 .driver-dot{
-  width:20px;height:20px;border-radius:50%;
-  background:#1677ff;border:4px solid #fff;
-  box-shadow:0 0 0 5px rgba(22,119,255,.25)
+  width:20px;height:20px;border-radius:50%;background:#1677ff;
+  border:4px solid #fff;box-shadow:0 0 0 5px rgba(22,119,255,.25)
 }
 .pin{
-  width:32px;height:32px;border-radius:50%;
-  border:3px solid #fff;background:#1769aa;color:#fff;
-  display:grid;place-items:center;
-  font-size:11px;font-weight:800;
-  box-shadow:0 3px 10px rgba(0,0,0,.35)
+  width:32px;height:32px;border-radius:50%;border:3px solid #fff;
+  background:#1769aa;color:#fff;display:grid;place-items:center;
+  font-size:11px;font-weight:800;box-shadow:0 3px 10px rgba(0,0,0,.35)
 }
 .pin.start{background:#2f8f5b}
 .pin.end{background:#10263a}
 .pin.done{background:#7e8d97}
 
-.street-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:#ffd33d;border:2px solid #10263a;
-}
-
-@media(max-width:600px){
-  .metric{display:none}
-}
-@media(min-width:700px){
-  .bottom{width:470px;right:auto}
-  .top{max-width:760px}
-}
+@media(max-width:600px){.metric{display:none}}
+@media(min-width:700px){.bottom{width:500px;right:auto}.top{max-width:760px}}
 </style>
 </head>
 
@@ -147,17 +118,17 @@ html,body{
 <div class="top">
   <div class="card title-card">
     <div class="title">Rota • Grupo Reunidas</div>
-    <div class="sub" id="status">Carregando rota fixa…</div>
+    <div class="sub" id="status">Carregando percurso de referência do SHP…</div>
   </div>
   <div class="card metric"><b id="km">—</b><span>distância</span></div>
   <div class="card metric"><b id="tempo">—</b><span>estimativa</span></div>
 </div>
 
 <div class="tools">
-  <button class="fab" id="zin" aria-label="Aumentar zoom">+</button>
-  <button class="fab" id="zout" aria-label="Diminuir zoom">−</button>
-  <button class="fab" id="center" aria-label="Centralizar">⌖</button>
-  <button class="fab" id="fit" aria-label="Ver rota inteira">⤢</button>
+  <button class="fab" id="zin">+</button>
+  <button class="fab" id="zout">−</button>
+  <button class="fab" id="center">⌖</button>
+  <button class="fab" id="fit">⤢</button>
 </div>
 
 <div class="bottom">
@@ -174,7 +145,7 @@ html,body{
 
   <div class="actions">
     <button class="btn primary" id="gps">Ativar GPS</button>
-    <button class="btn" id="recalc">Recalcular</button>
+    <button class="btn" id="recalc">Recarregar</button>
     <button class="btn" id="maps">Google Maps</button>
     <button class="btn green" id="served">Embarcou</button>
   </div>
@@ -185,188 +156,84 @@ html,body{
   </div>
 
   <div class="gps-note" id="gpsNote">
-    Trecho David → Natan: Av. Presidente Vargas → Rua Amazonas → Rua Rio Grande do Sul → Rua Rio Branco.
+    O trecho urbano azul é exatamente a linha enviada no SHP. Na Faz. Bandeirantes, a rota passa direto pela via principal, sem entrar.
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const DRIVER = {
-  id:"motorista",name:"Motorista",
-  lat:-17.997716,lon:-49.363442
+const DRIVER={id:"motorista",name:"Motorista",lat:-17.997716,lon:-49.363442};
+const OFFICE={id:"reunidas",name:"Grupo Reunidas",lat:-17.964560,lon:-50.008964};
+
+const P={
+  david:{id:"david",name:"David",lat:-18.0114722222,lon:-49.3354722222},
+  natan:{id:"natan",name:"Natan",lat:-18.0340000000,lon:-49.3700833333},
+  paulo:{id:"paulo",name:"Paulo",lat:-18.036596,lon:-49.374805},
+  telcio:{id:"telcio",name:"Télcio",lat:-18.015975,lon:-49.372719},
+  igor:{id:"igor",name:"Igor",lat:-18.0093055556,lon:-49.3623333333},
+  patricia:{id:"patricia",name:"Patrícia",lat:-18.0018333333,lon:-49.3636666667},
+  andreia:{id:"andreia",name:"Andreia",lat:-17.99549403666936,lon:-49.36505424068929},
+  bandeirantes:{id:"bandeirantes",name:"Faz. Bandeirantes",lat:-17.998239,lon:-49.526376}
 };
 
-const OFFICE = {
-  id:"reunidas",name:"Grupo Reunidas",
-  lat:-17.964560,lon:-50.008964
-};
+const IDA_ORDER=[P.david,P.natan,P.paulo,P.telcio,P.igor,P.patricia,P.andreia,P.bandeirantes];
+const VOLTA_ORDER=[...IDA_ORDER].reverse();
 
-const P = {
-  david:{
-    id:"david",name:"David",
-    lat:-18.0114722222,lon:-49.3354722222
-  },
-  natan:{
-    id:"natan",name:"Natan",
-    lat:-18.0340000000,lon:-49.3700833333
-  },
-  paulo:{
-    id:"paulo",name:"Paulo",
-    lat:-18.036596,lon:-49.374805
-  },
-  telcio:{
-    id:"telcio",name:"Télcio",
-    lat:-18.015975,lon:-49.372719
-  },
-  igor:{
-    id:"igor",name:"Igor",
-    lat:-18.0093055556,lon:-49.3623333333
-  },
-  patricia:{
-    id:"patricia",name:"Patrícia",
-    lat:-18.0018333333,lon:-49.3636666667
-  },
-  andreia:{
-    id:"andreia",name:"Andreia",
-    lat:-17.99549403666936,lon:-49.36505424068929
-  },
-  bandeirantes:{
-    id:"bandeirantes",name:"Faz. Bandeirantes",
-    lat:-17.998239,lon:-49.526376
-  }
-};
+/* GEOMETRIA EXATA DO SHP ENVIADO PELO USUÁRIO */
+const REFERENCE_ROUTE=[[-17.998080769648205,-49.363059238391465],[-17.999649246712718,-49.36093829292004],[-17.999381550893332,-49.359907553064765],[-18.000927394388885,-49.35807204324555],[-18.000991490046104,-49.357957076107844],[-18.000916083388127,-49.35750910070922],[-18.002005706462015,-49.34391522777182],[-18.002066031418167,-49.343498967445655],[-18.002288479515634,-49.34305495643107],[-18.00282009162871,-49.342591123496184],[-18.003498743060785,-49.342460298822246],[-18.005086023154153,-49.342484085126614],[-18.011359598407857,-49.34270609063392],[-18.011389759287937,-49.34063668215525],[-18.01301466907205,-49.34007770400297],[-18.01175168944642,-49.33605385418335],[-18.011555644036193,-49.3354433390383],[-18.011046678972274,-49.333817941574225],[-18.011668747184093,-49.33358007853071],[-18.013648040520827,-49.339831912191315],[-18.01482806577853,-49.339395829944856],[-18.0149185466222,-49.3392768984231],[-18.01503164761147,-49.339268969654974],[-18.015061807863013,-49.33940772309704],[-18.014877076241294,-49.33955044092314],[-18.013908174563422,-49.342218471394695],[-18.01370836149245,-49.34280520023539],[-18.013862933887967,-49.34297566874993],[-18.013510433227037,-49.348398946142304],[-18.013367170724788,-49.35169731367916],[-18.013325699978722,-49.351978784947335],[-18.01341241152756,-49.352153217845924],[-18.01307310522367,-49.35853191179645],[-18.01306179500229,-49.35863102139792],[-18.013122116174596,-49.35868255839068],[-18.013299309498844,-49.358615163861685],[-18.014245594234918,-49.3586904871588],[-18.02005514331274,-49.35894024335449],[-18.019866646999137,-49.368133649986746],[-18.02276946785971,-49.36823672397227],[-18.026803178440804,-49.368387370566516],[-18.029200742062034,-49.36932296520438],[-18.0331513731435,-49.36868866375499],[-18.03309859812184,-49.36972733237837],[-18.033976923208034,-49.369790762523316],[-18.033950535822974,-49.37009602009583],[-18.033935457315444,-49.37088889690759],[-18.036415854429784,-49.37098800650905],[-18.036325384632693,-49.37469470560399],[-18.037120763338958,-49.37473831382863],[-18.03710568510307,-49.37593952219842],[-18.03289126752637,-49.375741302995486],[-18.027425191007538,-49.375558941328784],[-18.016877068495177,-49.37518628922727],[-18.016730038735144,-49.37511493031422],[-18.016865758517998,-49.372621332741254],[-18.015632966651843,-49.37264908342966],[-18.01254906420382,-49.37264908342968],[-18.01294869274853,-49.362373399949384],[-18.00861305162678,-49.362183109514554],[-18.007587562650784,-49.36215139444208],[-18.00695416942026,-49.36216725197831],[-18.00591358988618,-49.36199281907974],[-18.00564213334529,-49.36312663292054],[-18.004993652138886,-49.36308698907995],[-18.004978571152222,-49.362825339732076],[-18.003809790760723,-49.36263504929726],[-18.003244249079856,-49.362658835601614],[-18.0025278936798,-49.362888769877024],[-18.002739030310746,-49.363546857630766],[-18.000280781014393,-49.36439523581935],[-18.000235536841135,-49.36592548806602],[-17.998893287753596,-49.365798627776144],[-17.996276626735423,-49.365830342848625],[-17.995703520004287,-49.365378403065925],[-17.99562811108523,-49.365188112631095],[-17.995462211349864,-49.365085038645574],[-17.995303852366003,-49.36515639755862],[-17.995228443276073,-49.36542597567463],[-17.993557181046455,-49.36784226775843],[-17.990499286323796,-49.37174322167223]];
+const REFERENCE_ROUTE_LENGTH=19229.385;
 
-/*
-  SEQUÊNCIA FIXA DEFINIDA:
-  David > Natan > Paulo > Télcio > Igor > Patrícia > Andreia
-  > Faz. Bandeirantes > Grupo Reunidas
-*/
-const IDA_ORDER = [
-  P.david,
-  P.natan,
-  P.paulo,
-  P.telcio,
-  P.igor,
-  P.patricia,
-  P.andreia,
-  P.bandeirantes
-];
+let mode=localStorage.getItem("reunidas_mode_shp")||"ida";
+let idaDone=new Set(JSON.parse(localStorage.getItem("reunidas_ida_done_shp")||"[]"));
+let voltaDone=new Set(JSON.parse(localStorage.getItem("reunidas_volta_done_shp")||"[]"));
 
-const VOLTA_ORDER = [...IDA_ORDER].reverse();
+let currentPosition=null;
+let watchId=null;
+let driverMarker=null;
+let accuracyCircle=null;
+let routeLayers=[];
+let passengerMarkers=[];
+let endpointMarkers=[];
+let extensionDistance=0;
+let extensionDuration=0;
 
-/*
-  Pontos de passagem do trecho David -> Natan.
-  Eles NÃO contam como passageiros e NÃO recebem numeração.
-  Servem apenas para forçar o desenho da rota pelas vias indicadas.
+const $=id=>document.getElementById(id);
 
-  1. Av. Presidente Vargas / região da Rua Amazonas
-  2. Rua Amazonas
-  3. Rua Rio Grande do Sul
-  4. Rua Rio Branco
-*/
-const STREET_VIA = [
-  {
-    id:"vargas",
-    name:"Av. Presidente Vargas",
-    lat:-18.01299,lon:-49.36252
-  },
-  {
-    id:"amazonas",
-    name:"Rua Amazonas",
-    lat:-18.01520,lon:-49.36320
-  },
-  {
-    id:"riograndedosul",
-    name:"Rua Rio Grande do Sul",
-    lat:-18.02009,lon:-49.37273
-  },
-  {
-    id:"riobranco",
-    name:"Rua Rio Branco",
-    lat:-18.029535,lon:-49.369464
-  }
-];
-
-let mode = localStorage.getItem("reunidas_mode_v2") || "ida";
-let idaDone = new Set(JSON.parse(localStorage.getItem("reunidas_ida_done_v2") || "[]"));
-let voltaDone = new Set(JSON.parse(localStorage.getItem("reunidas_volta_done_v2") || "[]"));
-
-let currentPosition = null;
-let routeLine = null;
-let routeOutline = null;
-let driverMarker = null;
-let accuracyCircle = null;
-let passengerMarkers = [];
-let endpointMarkers = [];
-let streetMarkers = [];
-let watchId = null;
-let routeDistance = null;
-let routeDuration = null;
-let routing = false;
-
-const $ = id => document.getElementById(id);
-
-const map = L.map("map",{
-  zoomControl:false,
-  attributionControl:true,
-  touchZoom:true,
-  dragging:true,
-  doubleClickZoom:true,
-  scrollWheelZoom:true,
-  zoomAnimation:false,
-  fadeAnimation:false,
-  markerZoomAnimation:false
+const map=L.map("map",{
+  zoomControl:false,attributionControl:true,touchZoom:true,dragging:true,
+  doubleClickZoom:true,scrollWheelZoom:true,zoomAnimation:false,
+  fadeAnimation:false,markerZoomAnimation:false
 }).setView([-18.01,-49.46],11);
 
-/* Google Híbrido */
-const googleHybrid = L.tileLayer(
+const googleHybrid=L.tileLayer(
   "https://mt1.google.com/vt/lyrs=y&hl=pt-BR&x={x}&y={y}&z={z}",
   {
     minZoom:2,maxZoom:21,tileSize:256,zoomOffset:0,
-    detectRetina:false,updateWhenIdle:true,
-    updateWhenZooming:false,keepBuffer:5,
-    attribution:"Google"
+    detectRetina:false,updateWhenIdle:true,updateWhenZooming:false,
+    keepBuffer:5,attribution:"Google"
   }
 ).addTo(map);
 
-function activeOrder(){
-  return mode==="ida" ? IDA_ORDER : VOLTA_ORDER;
-}
-
-function activeDone(){
-  return mode==="ida" ? idaDone : voltaDone;
-}
-
-function remaining(){
-  const done=activeDone();
-  return activeOrder().filter(p=>!done.has(p.id));
-}
-
-function tripStart(){
-  if(currentPosition) return currentPosition;
-  return mode==="ida" ? DRIVER : OFFICE;
-}
-
-function tripEnd(){
-  return mode==="ida" ? OFFICE : DRIVER;
-}
+function activeOrder(){return mode==="ida"?IDA_ORDER:VOLTA_ORDER}
+function activeDone(){return mode==="ida"?idaDone:voltaDone}
+function remaining(){const d=activeDone();return activeOrder().filter(p=>!d.has(p.id))}
 
 function saveState(){
-  localStorage.setItem("reunidas_mode_v2",mode);
-  localStorage.setItem("reunidas_ida_done_v2",JSON.stringify([...idaDone]));
-  localStorage.setItem("reunidas_volta_done_v2",JSON.stringify([...voltaDone]));
+  localStorage.setItem("reunidas_mode_shp",mode);
+  localStorage.setItem("reunidas_ida_done_shp",JSON.stringify([...idaDone]));
+  localStorage.setItem("reunidas_volta_done_shp",JSON.stringify([...voltaDone]));
 }
 
 function fmtKm(m){
-  if(m==null) return "—";
-  return m<1000 ? Math.round(m)+" m" : (m/1000).toFixed(1)+" km";
+  if(m==null)return "—";
+  return m<1000?Math.round(m)+" m":(m/1000).toFixed(1)+" km"
 }
 
 function fmtTime(s){
-  if(s==null) return "—";
+  if(s==null)return "—";
   const min=Math.max(1,Math.round(s/60));
-  if(min<60) return min+" min";
-  return Math.floor(min/60)+"h "+(min%60)+"min";
+  if(min<60)return min+" min";
+  return Math.floor(min/60)+"h "+(min%60)+"min"
 }
 
 function pinIcon(label,cls=""){
@@ -374,224 +241,152 @@ function pinIcon(label,cls=""){
     className:"",
     html:`<div class="pin ${cls}">${label}</div>`,
     iconSize:[32,32],iconAnchor:[16,16]
-  });
+  })
 }
 
-function streetIcon(){
-  return L.divIcon({
-    className:"",
-    html:'<div class="street-dot"></div>',
-    iconSize:[14,14],iconAnchor:[7,7]
-  });
+function clearRoute(){
+  routeLayers.forEach(l=>map.removeLayer(l));
+  routeLayers=[]
 }
 
 function clearMarkers(){
   passengerMarkers.forEach(m=>map.removeLayer(m));
   endpointMarkers.forEach(m=>map.removeLayer(m));
-  streetMarkers.forEach(m=>map.removeLayer(m));
-  passengerMarkers=[];
-  endpointMarkers=[];
-  streetMarkers=[];
+  passengerMarkers=[];endpointMarkers=[]
 }
 
 function rebuildMarkers(){
   clearMarkers();
 
-  const start=mode==="ida" ? DRIVER : OFFICE;
-  const end=mode==="ida" ? OFFICE : DRIVER;
+  const start=mode==="ida"?DRIVER:OFFICE;
+  const end=mode==="ida"?OFFICE:DRIVER;
 
   endpointMarkers.push(
     L.marker([start.lat,start.lon],{icon:pinIcon("S","start")})
-      .addTo(map)
-      .bindPopup(`<b>Início</b><br>${start.name}`)
+      .addTo(map).bindPopup(`<b>Início</b><br>${start.name}`)
   );
 
   endpointMarkers.push(
     L.marker([end.lat,end.lon],{icon:pinIcon("F","end")})
-      .addTo(map)
-      .bindPopup(`<b>Final</b><br>${end.name}`)
+      .addTo(map).bindPopup(`<b>Final</b><br>${end.name}`)
   );
 
   const done=activeDone();
-  const order=activeOrder();
-
-  order.forEach((p,i)=>{
+  activeOrder().forEach((p,i)=>{
     passengerMarkers.push(
-      L.marker(
-        [p.lat,p.lon],
-        {icon:pinIcon(done.has(p.id)?"✓":String(i+1),done.has(p.id)?"done":"")}
-      )
-      .addTo(map)
-      .bindPopup(
+      L.marker([p.lat,p.lon],{
+        icon:pinIcon(done.has(p.id)?"✓":String(i+1),done.has(p.id)?"done":"")
+      }).addTo(map).bindPopup(
         `<b>${i+1}. ${p.name}</b><br>`+
-        (done.has(p.id)
-          ? (mode==="ida"?"Embarque concluído":"Desembarque concluído")
-          : (mode==="ida"?"Embarque":"Desembarque"))
+        (done.has(p.id)?(mode==="ida"?"Embarque concluído":"Desembarque concluído"):
+        (mode==="ida"?"Embarque":"Desembarque"))
       )
-    );
-  });
-
-  /*
-    Mostra discretamente os pontos do caminho especial entre David/Natan
-    para facilitar conferência no mapa.
-  */
-  STREET_VIA.forEach(v=>{
-    streetMarkers.push(
-      L.marker([v.lat,v.lon],{
-        icon:streetIcon(),
-        interactive:true
-      })
-      .addTo(map)
-      .bindTooltip(v.name,{direction:"right"})
-    );
-  });
+    )
+  })
 }
 
-function buildRoutePoints(){
-  const rem=remaining();
-  const start=tripStart();
-  const end=tripEnd();
+function addPolyline(latlngs,color,weight=5,dash=null){
+  const outline=L.polyline(latlngs,{
+    weight:weight+4,color:"#fff",opacity:.82,lineCap:"round",lineJoin:"round"
+  }).addTo(map);
 
-  if(rem.length===0) return [start,end];
+  const line=L.polyline(latlngs,{
+    weight,color,opacity:1,lineCap:"round",lineJoin:"round",
+    dashArray:dash||null
+  }).addTo(map);
 
-  const pts=[start];
-
-  if(mode==="ida"){
-    rem.forEach((p,i)=>{
-      pts.push(p);
-
-      /*
-        Só injeta a sequência de ruas quando David e Natan ainda fazem
-        parte do trajeto e Natan vem imediatamente depois de David.
-      */
-      if(p.id==="david"){
-        const next=rem[i+1];
-        if(next && next.id==="natan"){
-          STREET_VIA.forEach(v=>pts.push(v));
-        }
-      }
-    });
-  }else{
-    rem.forEach((p,i)=>{
-      pts.push(p);
-
-      /*
-        Na volta, o trecho equivalente é Natan -> David.
-        Usa os mesmos pontos em ordem inversa.
-      */
-      if(p.id==="natan"){
-        const next=rem[i+1];
-        if(next && next.id==="david"){
-          [...STREET_VIA].reverse().forEach(v=>pts.push(v));
-        }
-      }
-    });
-  }
-
-  pts.push(end);
-  return pts;
+  routeLayers.push(outline,line);
+  return line
 }
 
-async function routeFixed(fit=true){
-  if(routing) return;
-  routing=true;
-  $("recalc").disabled=true;
-
-  const points=buildRoutePoints();
+async function routeExtension(points,color){
   const coords=points.map(p=>`${p.lon},${p.lat}`).join(";");
-
-  $("status").textContent=
-    mode==="ida"
-    ? "IDA • rota fixa definida pelo motorista"
-    : "VOLTA • ordem inversa da ida";
-
   try{
     const res=await fetch(
-      `https://router.project-osrm.org/route/v1/driving/${coords}`+
-      `?overview=full&geometries=geojson&steps=false`
+      `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`
     );
     const data=await res.json();
-
-    if(data.code!=="Ok" || !data.routes?.length){
-      throw new Error("Rota indisponível");
-    }
+    if(data.code!=="Ok"||!data.routes?.length)throw new Error("route");
 
     const r=data.routes[0];
-    routeDistance=r.distance;
-    routeDuration=r.duration;
+    const ll=r.geometry.coordinates.map(c=>[c[1],c[0]]);
+    addPolyline(ll,color,5);
 
-    drawGeoJSON(r.geometry,fit);
-
+    extensionDistance+=r.distance||0;
+    extensionDuration+=r.duration||0;
+    return ll;
   }catch(e){
-    console.error(e);
-    routeDistance=null;
-    routeDuration=null;
-    drawSimple(points,fit);
-    $("status").textContent="Rota fixa aproximada • serviço de ruas indisponível";
+    const ll=points.map(p=>[p.lat,p.lon]);
+    addPolyline(ll,color,4,"8 8");
+    return ll;
   }
+}
 
-  routing=false;
-  $("recalc").disabled=false;
+async function drawFullRoute(fit=true){
+  clearRoute();
+  extensionDistance=0;
+  extensionDuration=0;
+
+  const color=mode==="ida"?"#1769aa":"#e56f00";
+
+  const ref=mode==="ida"
+    ? REFERENCE_ROUTE
+    : [...REFERENCE_ROUTE].reverse();
+
+  /*
+    A linha do SHP é soberana no trecho urbano:
+    não é recalculada pelo OSRM.
+  */
+  const refLine=addPolyline(ref,color,6);
+
+  if(mode==="ida"){
+    const refEnd=REFERENCE_ROUTE[REFERENCE_ROUTE.length-1];
+    const endPoint={lat:refEnd[0],lon:refEnd[1]};
+
+    // Depois do fim da linha: seguir direto ao Grupo Reunidas, passando pela região da Faz. Bandeirantes sem entrar.
+    await routeExtension([endPoint,OFFICE],color);
+
+    $("status").textContent=
+      "IDA • percurso urbano exatamente conforme o SHP enviado";
+  }else{
+    const refEnd=REFERENCE_ROUTE[REFERENCE_ROUTE.length-1];
+    const joinPoint={lat:refEnd[0],lon:refEnd[1]};
+
+    // Volta: Reunidas -> ponto de entrada na linha, passando pela região da Faz. Bandeirantes sem entrar.
+    await routeExtension([OFFICE,joinPoint],color);
+
+    $("status").textContent=
+      "VOLTA • percurso urbano inverso da linha do SHP";
+  }
 
   rebuildMarkers();
   render();
-}
 
-function clearRoute(){
-  if(routeLine) map.removeLayer(routeLine);
-  if(routeOutline) map.removeLayer(routeOutline);
-}
-
-function drawGeoJSON(geo,fit){
-  clearRoute();
-
-  const latlngs=geo.coordinates.map(c=>[c[1],c[0]]);
-
-  routeOutline=L.polyline(latlngs,{
-    weight:9,color:"#fff",opacity:.84,
-    lineCap:"round",lineJoin:"round"
-  }).addTo(map);
-
-  routeLine=L.polyline(latlngs,{
-    weight:5,
-    color:mode==="ida"?"#1769aa":"#e56f00",
-    opacity:1,
-    lineCap:"round",lineJoin:"round"
-  }).addTo(map);
-
-  if(fit) fitRoute();
-}
-
-function drawSimple(points,fit){
-  clearRoute();
-
-  const latlngs=points.map(p=>[p.lat,p.lon]);
-
-  routeOutline=L.polyline(latlngs,{
-    weight:8,color:"#fff",opacity:.72
-  }).addTo(map);
-
-  routeLine=L.polyline(latlngs,{
-    weight:4,
-    color:mode==="ida"?"#1769aa":"#e56f00",
-    dashArray:"8 8"
-  }).addTo(map);
-
-  if(fit) fitRoute();
+  if(fit)fitRoute()
 }
 
 function fitRoute(){
-  if(routeLine && routeLine.getBounds().isValid()){
-    map.fitBounds(routeLine.getBounds(),{
+  if(!routeLayers.length)return;
+  const group=L.featureGroup(routeLayers);
+  if(group.getBounds().isValid()){
+    map.fitBounds(group.getBounds(),{
       paddingTopLeft:[20,105],
       paddingBottomRight:[20,220]
-    });
+    })
   }
 }
 
 function render(){
-  $("km").textContent=fmtKm(routeDistance);
-  $("tempo").textContent=fmtTime(routeDuration);
+  /*
+    Comprimento da linha de referência vem diretamente do SHP.
+    Para tempo urbano, usa-se estimativa média de 35 km/h.
+  */
+  const urbanTime=REFERENCE_ROUTE_LENGTH/(35000/3600);
+  const totalDistance=REFERENCE_ROUTE_LENGTH+extensionDistance;
+  const totalDuration=urbanTime+extensionDuration;
+
+  $("km").textContent=fmtKm(totalDistance);
+  $("tempo").textContent=fmtTime(totalDuration);
 
   $("modeIda").classList.toggle("active",mode==="ida");
   $("modeVolta").classList.toggle("active",mode==="volta");
@@ -599,81 +394,55 @@ function render(){
   $("modeText").textContent="Modo: "+mode;
 
   const order=activeOrder();
-  const names=order.map((p,i)=>`${i+1}. ${p.name}`).join(" → ");
-
   $("routeSeq").innerHTML=
-    `<b>${mode==="ida"?"Sequência da ida":"Sequência da volta"}:</b> `+names;
+    `<b>${mode==="ida"?"Sequência da ida":"Sequência da volta"}:</b> `+
+    order.map((p,i)=>`${i+1}. ${p.name}`).join(" → ")+
+    ` <span class="ref-badge">linha SHP</span>`;
 
   $("nextLabel").textContent=
     mode==="ida"?"PRÓXIMO EMBARQUE":"PRÓXIMO DESEMBARQUE";
 
-  $("served").textContent=
-    mode==="ida"?"Embarcou":"Desembarcou";
-
-  $("served").className=
-    "btn "+(mode==="ida"?"green":"orange");
+  $("served").textContent=mode==="ida"?"Embarcou":"Desembarcou";
+  $("served").className="btn "+(mode==="ida"?"green":"orange");
 
   const done=activeDone();
-  $("progressText").textContent=
-    `${done.size} de ${order.length} concluídos`;
+  $("progressText").textContent=`${done.size} de ${order.length} concluídos`;
 
   const rem=remaining();
-
   if(rem.length){
     const first=rem[0];
-    const originalNumber=order.findIndex(p=>p.id===first.id)+1;
-
-    $("nextName").textContent=
-      `${originalNumber}. ${first.name}`;
-
+    const n=order.findIndex(p=>p.id===first.id)+1;
+    $("nextName").textContent=`${n}. ${first.name}`;
     $("nextMeta").textContent=
-      first.id==="natan" && mode==="ida"
-      ? "Acesso definido via Pres. Vargas → Amazonas → Rio Grande do Sul → Rio Branco."
-      : `Próxima parada da ${mode}.`;
-
+      first.id==="bandeirantes"
+      ?"Passar pela Faz. Bandeirantes sem entrar; seguir direto pela via principal."
+      :"Percurso definido pela linha de referência.";
     $("served").disabled=false;
   }else{
-    $("nextName").textContent=
-      mode==="ida"?"Grupo Reunidas":"Motorista";
-
+    $("nextName").textContent=mode==="ida"?"Grupo Reunidas":"Motorista";
     $("nextMeta").textContent=
-      mode==="ida"
-      ?"Todos os embarques concluídos."
-      :"Todos os desembarques concluídos.";
-
+      mode==="ida"?"Todos os embarques concluídos.":"Todos os desembarques concluídos.";
     $("served").disabled=true;
   }
 }
 
 function activateGPS(){
-  if(!window.isSecureContext ||
-     location.protocol==="content:" ||
-     location.protocol==="file:"){
-
-    $("gpsNote").textContent=
-      "GPS bloqueado: abra o mapa pelo endereço HTTPS do GitHub Pages.";
+  if(!window.isSecureContext||location.protocol==="content:"||location.protocol==="file:"){
+    $("gpsNote").textContent="GPS bloqueado: abra pelo endereço HTTPS do GitHub Pages.";
     $("gps").textContent="GPS requer HTTPS";
-    return;
+    return
   }
 
   if(!navigator.geolocation){
     $("gpsNote").textContent="Geolocalização indisponível neste navegador.";
-    return;
+    return
   }
 
-  if(watchId!==null){
-    navigator.geolocation.clearWatch(watchId);
-  }
-
-  $("gpsNote").textContent="Buscando localização…";
+  if(watchId!==null)navigator.geolocation.clearWatch(watchId);
 
   watchId=navigator.geolocation.watchPosition(
     pos=>{
-      currentPosition={
-        lat:pos.coords.latitude,
-        lon:pos.coords.longitude
-      };
-
+      currentPosition={lat:pos.coords.latitude,lon:pos.coords.longitude};
       const ll=[currentPosition.lat,currentPosition.lon];
 
       if(!driverMarker){
@@ -681,24 +450,18 @@ function activateGPS(){
           icon:L.divIcon({
             className:"",
             html:'<div class="driver-dot"></div>',
-            iconSize:[28,28],
-            iconAnchor:[14,14]
+            iconSize:[28,28],iconAnchor:[14,14]
           }),
           zIndexOffset:3000
-        })
-        .addTo(map)
-        .bindPopup("<b>Localização atual do motorista</b>");
+        }).addTo(map).bindPopup("<b>Localização atual do motorista</b>");
 
         accuracyCircle=L.circle(ll,{
-          radius:pos.coords.accuracy||15,
-          weight:1,opacity:.4,fillOpacity:.08,
-          color:"#1677ff"
+          radius:pos.coords.accuracy||15,weight:1,opacity:.4,
+          fillOpacity:.08,color:"#1677ff"
         }).addTo(map);
       }else{
         driverMarker.setLatLng(ll);
-        accuracyCircle
-          .setLatLng(ll)
-          .setRadius(pos.coords.accuracy||15);
+        accuracyCircle.setLatLng(ll).setRadius(pos.coords.accuracy||15)
       }
 
       $("gps").textContent="GPS ativo";
@@ -707,37 +470,19 @@ function activateGPS(){
     },
     err=>{
       let msg="Não foi possível acessar a localização.";
-      if(err.code===1) msg="Permissão de localização negada no navegador.";
-      if(err.code===2) msg="O celular não conseguiu determinar a posição.";
-      if(err.code===3) msg="Tempo esgotado ao obter a localização.";
-      $("gpsNote").textContent=msg;
+      if(err.code===1)msg="Permissão de localização negada no navegador.";
+      if(err.code===2)msg="O celular não conseguiu determinar a posição.";
+      if(err.code===3)msg="Tempo esgotado ao obter a localização.";
+      $("gpsNote").textContent=msg
     },
-    {
-      enableHighAccuracy:true,
-      maximumAge:3000,
-      timeout:15000
-    }
-  );
+    {enableHighAccuracy:true,maximumAge:3000,timeout:15000}
+  )
 }
 
 async function setMode(newMode){
   mode=newMode;
   saveState();
-
-  currentPosition=null;
-
-  if(driverMarker){
-    map.removeLayer(driverMarker);
-    driverMarker=null;
-  }
-  if(accuracyCircle){
-    map.removeLayer(accuracyCircle);
-    accuracyCircle=null;
-  }
-
-  rebuildMarkers();
-  render();
-  await routeFixed(true);
+  await drawFullRoute(true)
 }
 
 $("modeIda").onclick=()=>setMode("ida");
@@ -747,36 +492,34 @@ $("zin").onclick=()=>map.zoomIn();
 $("zout").onclick=()=>map.zoomOut();
 
 $("center").onclick=()=>{
-  if(currentPosition){
-    map.setView([currentPosition.lat,currentPosition.lon],17);
-  }else{
+  if(currentPosition)map.setView([currentPosition.lat,currentPosition.lon],17);
+  else {
     const s=mode==="ida"?DRIVER:OFFICE;
-    map.setView([s.lat,s.lon],16);
+    map.setView([s.lat,s.lon],16)
   }
 };
 
 $("fit").onclick=fitRoute;
 $("gps").onclick=activateGPS;
-$("recalc").onclick=()=>routeFixed(false);
+$("recalc").onclick=()=>drawFullRoute(false);
 
 $("served").onclick=async()=>{
   const rem=remaining();
-  if(!rem.length) return;
-
+  if(!rem.length)return;
   activeDone().add(rem[0].id);
   saveState();
-
-  await routeFixed(false);
+  rebuildMarkers();
+  render()
 };
 
 $("maps").onclick=()=>{
   /*
-    Google Maps recebe a ordem FIXA dos passageiros.
-    O desenho principal do HTML é que contém os pontos especiais das ruas.
+    Google Maps é apenas navegação auxiliar.
+    O traçado oficial continua sendo a linha do SHP exibida no HTML.
   */
-  const s=tripStart();
-  const e=tripEnd();
-  const mids=remaining();
+  const order=activeOrder().filter(p=>p.id!=="bandeirantes");
+  const s=mode==="ida"?DRIVER:OFFICE;
+  const e=mode==="ida"?OFFICE:DRIVER;
 
   let url=
     `https://www.google.com/maps/dir/?api=1`+
@@ -784,25 +527,20 @@ $("maps").onclick=()=>{
     `&destination=${encodeURIComponent(e.lat+","+e.lon)}`+
     `&travelmode=driving`;
 
-  if(mids.length){
-    url+=`&waypoints=${encodeURIComponent(
-      mids.map(p=>p.lat+","+p.lon).join("|")
-    )}`;
-  }
+  // Faz. Bandeirantes permanece visível no HTML, mas não é enviada
+  // como waypoint ao Google Maps para evitar a entrada e retorno.
+  const mids=order.map(p=>p.lat+","+p.lon);
+  if(mids.length)url+=`&waypoints=${encodeURIComponent(mids.join("|"))}`;
 
-  window.open(url,"_blank");
+  window.open(url,"_blank")
 };
 
-/* Duplo clique no título reinicia o modo atual */
 document.querySelector(".title-card").ondblclick=async()=>{
-  if(confirm(
-    mode==="ida"
-    ?"Reiniciar todos os embarques da ida?"
-    :"Reiniciar todos os desembarques da volta?"
-  )){
+  if(confirm(mode==="ida"?"Reiniciar embarques da ida?":"Reiniciar desembarques da volta?")){
     activeDone().clear();
     saveState();
-    await routeFixed(true);
+    rebuildMarkers();
+    render()
   }
 };
 
@@ -810,25 +548,20 @@ function fixSize(){
   setTimeout(()=>{
     map.invalidateSize(false);
     try{googleHybrid.redraw()}catch(e){}
-  },150);
+  },150)
 }
 
 window.addEventListener("load",()=>{
   fixSize();
   setTimeout(fixSize,700);
-  setTimeout(fixSize,1500);
+  setTimeout(fixSize,1500)
 });
-
 window.addEventListener("resize",fixSize);
 window.addEventListener("orientationchange",()=>setTimeout(fixSize,400));
 
-document.addEventListener("visibilitychange",()=>{
-  if(!document.hidden) fixSize();
-});
-
 rebuildMarkers();
 render();
-routeFixed(true);
+drawFullRoute(true);
 </script>
 </body>
 </html>
