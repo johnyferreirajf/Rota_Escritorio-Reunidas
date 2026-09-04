@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
 <meta name="theme-color" content="#0b2239">
-<title>Rota de Embarque • Grupo Reunidas</title>
+<title>Rota Grupo Reunidas</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
@@ -63,7 +63,7 @@ html,body{
 
 .mode{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:7px;margin-bottom:10px
+  gap:7px;margin-bottom:9px
 }
 .mode button{
   border:1px solid #ccd7df;background:#eef3f6;color:#29455c;
@@ -72,6 +72,14 @@ html,body{
 .mode button.active{
   background:#102f4d;color:#fff;border-color:#102f4d
 }
+
+.route-seq{
+  margin-bottom:8px;padding:7px 9px;
+  border-radius:10px;background:#eef4f8;
+  font-size:10px;line-height:1.35;color:#395369;
+  white-space:nowrap;overflow-x:auto
+}
+.route-seq b{color:#10263a}
 
 .eyebrow{
   font-size:10px;font-weight:bold;letter-spacing:.08em;color:#1769aa
@@ -95,11 +103,11 @@ html,body{
 .btn:disabled{opacity:.5}
 
 .progress{
-  margin-top:9px;font-size:10px;color:#667480;
+  margin-top:8px;font-size:10px;color:#667480;
   display:flex;justify-content:space-between;gap:10px
 }
 .gps-note{
-  margin-top:6px;font-size:10px;line-height:1.3;color:#667480
+  margin-top:5px;font-size:10px;line-height:1.3;color:#667480
 }
 
 .driver-dot{
@@ -118,11 +126,16 @@ html,body{
 .pin.end{background:#10263a}
 .pin.done{background:#7e8d97}
 
+.street-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#ffd33d;border:2px solid #10263a;
+}
+
 @media(max-width:600px){
   .metric{display:none}
 }
 @media(min-width:700px){
-  .bottom{width:430px;right:auto}
+  .bottom{width:470px;right:auto}
   .top{max-width:760px}
 }
 </style>
@@ -134,7 +147,7 @@ html,body{
 <div class="top">
   <div class="card title-card">
     <div class="title">Rota • Grupo Reunidas</div>
-    <div class="sub" id="status">Calculando melhor sequência pelas ruas…</div>
+    <div class="sub" id="status">Carregando rota fixa…</div>
   </div>
   <div class="card metric"><b id="km">—</b><span>distância</span></div>
   <div class="card metric"><b id="tempo">—</b><span>estimativa</span></div>
@@ -149,9 +162,11 @@ html,body{
 
 <div class="bottom">
   <div class="mode">
-    <button id="modeIda" class="active">IDA → Escritório</button>
+    <button id="modeIda" class="active">IDA → Reunidas</button>
     <button id="modeVolta">VOLTA → Casas</button>
   </div>
+
+  <div class="route-seq" id="routeSeq"></div>
 
   <div class="eyebrow" id="nextLabel">PRÓXIMO EMBARQUE</div>
   <div class="next" id="nextName">Calculando…</div>
@@ -165,12 +180,12 @@ html,body{
   </div>
 
   <div class="progress">
-    <span id="progressText">0 de 6 concluídos</span>
+    <span id="progressText">0 de 8 concluídos</span>
     <span id="modeText">Modo: ida</span>
   </div>
 
   <div class="gps-note" id="gpsNote">
-    Para GPS em tempo real, abra esta página por um endereço HTTPS.
+    Trecho David → Natan: Av. Presidente Vargas → Rua Amazonas → Rua Rio Grande do Sul → Rua Rio Branco.
   </div>
 </div>
 
@@ -186,39 +201,104 @@ const OFFICE = {
   lat:-17.964560,lon:-50.008964
 };
 
-const PEOPLE = [
-  {id:"igor",name:"Igor",
-   lat:-18.0093055556,lon:-49.3623333333},
+const P = {
+  david:{
+    id:"david",name:"David",
+    lat:-18.0114722222,lon:-49.3354722222
+  },
+  natan:{
+    id:"natan",name:"Natan",
+    lat:-18.0340000000,lon:-49.3700833333
+  },
+  paulo:{
+    id:"paulo",name:"Paulo",
+    lat:-18.036596,lon:-49.374805
+  },
+  telcio:{
+    id:"telcio",name:"Télcio",
+    lat:-18.015975,lon:-49.372719
+  },
+  igor:{
+    id:"igor",name:"Igor",
+    lat:-18.0093055556,lon:-49.3623333333
+  },
+  patricia:{
+    id:"patricia",name:"Patrícia",
+    lat:-18.0018333333,lon:-49.3636666667
+  },
+  andreia:{
+    id:"andreia",name:"Andreia",
+    lat:-17.99549403666936,lon:-49.36505424068929
+  },
+  bandeirantes:{
+    id:"bandeirantes",name:"Faz. Bandeirantes",
+    lat:-17.998239,lon:-49.526376
+  }
+};
 
-  {id:"telcio",name:"Télcio",
-   lat:-18.015975,lon:-49.372719},
-
-  {id:"david",name:"David",
-   lat:-18.0114722222,lon:-49.3354722222},
-
-  {id:"paulo",name:"Paulo",
-   lat:-18.036596,lon:-49.374805},
-
-  {id:"natan",name:"Natan",
-   lat:-18.0340000000,lon:-49.3700833333},
-
-  /* 18°00'06.6"S 49°21'49.2"W */
-  {id:"patricia",name:"Patrícia",
-   lat:-18.0018333333,lon:-49.3636666667}
+/*
+  SEQUÊNCIA FIXA DEFINIDA:
+  David > Natan > Paulo > Télcio > Igor > Patrícia > Andreia
+  > Faz. Bandeirantes > Grupo Reunidas
+*/
+const IDA_ORDER = [
+  P.david,
+  P.natan,
+  P.paulo,
+  P.telcio,
+  P.igor,
+  P.patricia,
+  P.andreia,
+  P.bandeirantes
 ];
 
-let mode = localStorage.getItem("reunidas_mode") || "ida";
-let idaDone = new Set(JSON.parse(localStorage.getItem("reunidas_ida_done") || "[]"));
-let voltaDone = new Set(JSON.parse(localStorage.getItem("reunidas_volta_done") || "[]"));
+const VOLTA_ORDER = [...IDA_ORDER].reverse();
+
+/*
+  Pontos de passagem do trecho David -> Natan.
+  Eles NÃO contam como passageiros e NÃO recebem numeração.
+  Servem apenas para forçar o desenho da rota pelas vias indicadas.
+
+  1. Av. Presidente Vargas / região da Rua Amazonas
+  2. Rua Amazonas
+  3. Rua Rio Grande do Sul
+  4. Rua Rio Branco
+*/
+const STREET_VIA = [
+  {
+    id:"vargas",
+    name:"Av. Presidente Vargas",
+    lat:-18.01299,lon:-49.36252
+  },
+  {
+    id:"amazonas",
+    name:"Rua Amazonas",
+    lat:-18.01520,lon:-49.36320
+  },
+  {
+    id:"riograndedosul",
+    name:"Rua Rio Grande do Sul",
+    lat:-18.02009,lon:-49.37273
+  },
+  {
+    id:"riobranco",
+    name:"Rua Rio Branco",
+    lat:-18.029535,lon:-49.369464
+  }
+];
+
+let mode = localStorage.getItem("reunidas_mode_v2") || "ida";
+let idaDone = new Set(JSON.parse(localStorage.getItem("reunidas_ida_done_v2") || "[]"));
+let voltaDone = new Set(JSON.parse(localStorage.getItem("reunidas_volta_done_v2") || "[]"));
 
 let currentPosition = null;
-let ordered = [];
 let routeLine = null;
 let routeOutline = null;
 let driverMarker = null;
 let accuracyCircle = null;
 let passengerMarkers = [];
 let endpointMarkers = [];
+let streetMarkers = [];
 let watchId = null;
 let routeDistance = null;
 let routeDuration = null;
@@ -238,7 +318,7 @@ const map = L.map("map",{
   markerZoomAnimation:false
 }).setView([-18.01,-49.46],11);
 
-/* Google Híbrido: satélite + nomes de ruas/rodovias */
+/* Google Híbrido */
 const googleHybrid = L.tileLayer(
   "https://mt1.google.com/vt/lyrs=y&hl=pt-BR&x={x}&y={y}&z={z}",
   {
@@ -249,28 +329,32 @@ const googleHybrid = L.tileLayer(
   }
 ).addTo(map);
 
+function activeOrder(){
+  return mode==="ida" ? IDA_ORDER : VOLTA_ORDER;
+}
+
 function activeDone(){
   return mode==="ida" ? idaDone : voltaDone;
 }
 
-function saveState(){
-  localStorage.setItem("reunidas_mode",mode);
-  localStorage.setItem("reunidas_ida_done",JSON.stringify([...idaDone]));
-  localStorage.setItem("reunidas_volta_done",JSON.stringify([...voltaDone]));
+function remaining(){
+  const done=activeDone();
+  return activeOrder().filter(p=>!done.has(p.id));
 }
 
-function endpointStart(){
+function tripStart(){
   if(currentPosition) return currentPosition;
   return mode==="ida" ? DRIVER : OFFICE;
 }
 
-function endpointEnd(){
+function tripEnd(){
   return mode==="ida" ? OFFICE : DRIVER;
 }
 
-function remaining(){
-  const done=activeDone();
-  return PEOPLE.filter(p=>!done.has(p.id));
+function saveState(){
+  localStorage.setItem("reunidas_mode_v2",mode);
+  localStorage.setItem("reunidas_ida_done_v2",JSON.stringify([...idaDone]));
+  localStorage.setItem("reunidas_volta_done_v2",JSON.stringify([...voltaDone]));
 }
 
 function fmtKm(m){
@@ -293,176 +377,164 @@ function pinIcon(label,cls=""){
   });
 }
 
+function streetIcon(){
+  return L.divIcon({
+    className:"",
+    html:'<div class="street-dot"></div>',
+    iconSize:[14,14],iconAnchor:[7,7]
+  });
+}
+
 function clearMarkers(){
   passengerMarkers.forEach(m=>map.removeLayer(m));
   endpointMarkers.forEach(m=>map.removeLayer(m));
+  streetMarkers.forEach(m=>map.removeLayer(m));
   passengerMarkers=[];
   endpointMarkers=[];
+  streetMarkers=[];
 }
 
 function rebuildMarkers(){
   clearMarkers();
 
-  const start = mode==="ida" ? DRIVER : OFFICE;
-  const end   = mode==="ida" ? OFFICE : DRIVER;
+  const start=mode==="ida" ? DRIVER : OFFICE;
+  const end=mode==="ida" ? OFFICE : DRIVER;
 
   endpointMarkers.push(
     L.marker([start.lat,start.lon],{icon:pinIcon("S","start")})
-     .addTo(map)
-     .bindPopup(`<b>Início da ${mode}</b><br>${start.name}`)
+      .addTo(map)
+      .bindPopup(`<b>Início</b><br>${start.name}`)
   );
 
   endpointMarkers.push(
     L.marker([end.lat,end.lon],{icon:pinIcon("F","end")})
-     .addTo(map)
-     .bindPopup(`<b>Final da ${mode}</b><br>${end.name}`)
+      .addTo(map)
+      .bindPopup(`<b>Final</b><br>${end.name}`)
   );
 
   const done=activeDone();
+  const order=activeOrder();
 
-  PEOPLE.forEach(p=>{
-    const idx=ordered.findIndex(x=>x.id===p.id);
-    const isDone=done.has(p.id);
-
-    let label="•";
-    if(isDone){
-      label="✓";
-    }else if(idx>=0){
-      /* A numeração agora segue EXATAMENTE a ordem otimizada da rota */
-      label=String(idx+1);
-    }
-
+  order.forEach((p,i)=>{
     passengerMarkers.push(
-      L.marker([p.lat,p.lon],{
-        icon:pinIcon(label,isDone?"done":"")
-      })
+      L.marker(
+        [p.lat,p.lon],
+        {icon:pinIcon(done.has(p.id)?"✓":String(i+1),done.has(p.id)?"done":"")}
+      )
       .addTo(map)
       .bindPopup(
-        `<b>${p.name}</b><br>`+
-        (isDone
-          ? (mode==="ida" ? "Embarque concluído" : "Desembarque concluído")
-          : (idx>=0 ? `Parada ${idx+1}` : "Aguardando rota"))
+        `<b>${i+1}. ${p.name}</b><br>`+
+        (done.has(p.id)
+          ? (mode==="ida"?"Embarque concluído":"Desembarque concluído")
+          : (mode==="ida"?"Embarque":"Desembarque"))
       )
+    );
+  });
+
+  /*
+    Mostra discretamente os pontos do caminho especial entre David/Natan
+    para facilitar conferência no mapa.
+  */
+  STREET_VIA.forEach(v=>{
+    streetMarkers.push(
+      L.marker([v.lat,v.lon],{
+        icon:streetIcon(),
+        interactive:true
+      })
+      .addTo(map)
+      .bindTooltip(v.name,{direction:"right"})
     );
   });
 }
 
-async function optimize(fit=true){
+function buildRoutePoints(){
+  const rem=remaining();
+  const start=tripStart();
+  const end=tripEnd();
+
+  if(rem.length===0) return [start,end];
+
+  const pts=[start];
+
+  if(mode==="ida"){
+    rem.forEach((p,i)=>{
+      pts.push(p);
+
+      /*
+        Só injeta a sequência de ruas quando David e Natan ainda fazem
+        parte do trajeto e Natan vem imediatamente depois de David.
+      */
+      if(p.id==="david"){
+        const next=rem[i+1];
+        if(next && next.id==="natan"){
+          STREET_VIA.forEach(v=>pts.push(v));
+        }
+      }
+    });
+  }else{
+    rem.forEach((p,i)=>{
+      pts.push(p);
+
+      /*
+        Na volta, o trecho equivalente é Natan -> David.
+        Usa os mesmos pontos em ordem inversa.
+      */
+      if(p.id==="natan"){
+        const next=rem[i+1];
+        if(next && next.id==="david"){
+          [...STREET_VIA].reverse().forEach(v=>pts.push(v));
+        }
+      }
+    });
+  }
+
+  pts.push(end);
+  return pts;
+}
+
+async function routeFixed(fit=true){
   if(routing) return;
   routing=true;
-
-  const rem=remaining();
-  const start=endpointStart();
-  const end=endpointEnd();
-
-  $("status").textContent="Calculando melhor sequência pelas ruas…";
   $("recalc").disabled=true;
 
-  if(rem.length===0){
-    ordered=[];
-    await routeDirect(start,end,fit);
-    routing=false;
-    $("recalc").disabled=false;
-    rebuildMarkers();
-    render();
-    return;
-  }
+  const points=buildRoutePoints();
+  const coords=points.map(p=>`${p.lon},${p.lat}`).join(";");
 
-  const pts=[start,...rem,end];
-  const coords=pts.map(p=>`${p.lon},${p.lat}`).join(";");
+  $("status").textContent=
+    mode==="ida"
+    ? "IDA • rota fixa definida pelo motorista"
+    : "VOLTA • ordem inversa da ida";
 
   try{
-    const res=await fetch(
-      `https://router.project-osrm.org/trip/v1/driving/${coords}`+
-      `?source=first&destination=last&roundtrip=false&overview=full&geometries=geojson`
-    );
-    const data=await res.json();
-
-    if(data.code!=="Ok" || !data.trips?.length) throw new Error("route");
-
-    const wp=data.waypoints;
-
-    ordered=rem
-      .map((p,i)=>({...p,routeIndex:wp[i+1].waypoint_index}))
-      .sort((a,b)=>a.routeIndex-b.routeIndex);
-
-    const trip=data.trips[0];
-    routeDistance=trip.distance;
-    routeDuration=trip.duration;
-
-    drawGeoJSON(trip.geometry,fit);
-
-    $("status").textContent=
-      mode==="ida"
-      ? "IDA • sequência otimizada até o Grupo Reunidas"
-      : "VOLTA • sequência otimizada para deixar os passageiros";
-  }catch(e){
-    console.error(e);
-
-    /* fallback: proximidade simples; a ordem será recalculada pelo OSRM quando voltar */
-    ordered=nearestNeighbor(start,rem,end);
-    routeDistance=null;
-    routeDuration=null;
-
-    drawSimple([start,...ordered,end],fit);
-    $("status").textContent="Rota aproximada • serviço de rotas indisponível";
-  }
-
-  routing=false;
-  $("recalc").disabled=false;
-  rebuildMarkers();
-  render();
-}
-
-function hav(a,b){
-  const R=6371000, rad=Math.PI/180;
-  const p1=a.lat*rad,p2=b.lat*rad;
-  const dp=(b.lat-a.lat)*rad;
-  const dl=(b.lon-a.lon)*rad;
-  const h=Math.sin(dp/2)**2+
-          Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
-  return 2*R*Math.asin(Math.sqrt(h));
-}
-
-function nearestNeighbor(start,items,end){
-  let here=start;
-  let left=[...items];
-  let result=[];
-
-  while(left.length){
-    left.sort((a,b)=>hav(here,a)-hav(here,b));
-    const next=left.shift();
-    result.push(next);
-    here=next;
-  }
-  return result;
-}
-
-async function routeDirect(start,end,fit){
-  try{
-    const coords=`${start.lon},${start.lat};${end.lon},${end.lat}`;
     const res=await fetch(
       `https://router.project-osrm.org/route/v1/driving/${coords}`+
-      `?overview=full&geometries=geojson`
+      `?overview=full&geometries=geojson&steps=false`
     );
     const data=await res.json();
 
-    if(data.code!=="Ok" || !data.routes?.length) throw new Error("route");
+    if(data.code!=="Ok" || !data.routes?.length){
+      throw new Error("Rota indisponível");
+    }
 
     const r=data.routes[0];
     routeDistance=r.distance;
     routeDuration=r.duration;
+
     drawGeoJSON(r.geometry,fit);
 
-    $("status").textContent=
-      mode==="ida"
-      ? "Todos embarcaram • seguindo para o Grupo Reunidas"
-      : "Todos desembarcaram • seguindo para o ponto do motorista";
   }catch(e){
+    console.error(e);
     routeDistance=null;
     routeDuration=null;
-    drawSimple([start,end],fit);
+    drawSimple(points,fit);
+    $("status").textContent="Rota fixa aproximada • serviço de ruas indisponível";
   }
+
+  routing=false;
+  $("recalc").disabled=false;
+
+  rebuildMarkers();
+  render();
 }
 
 function clearRoute(){
@@ -472,15 +544,18 @@ function clearRoute(){
 
 function drawGeoJSON(geo,fit){
   clearRoute();
+
   const latlngs=geo.coordinates.map(c=>[c[1],c[0]]);
 
   routeOutline=L.polyline(latlngs,{
-    weight:9,color:"#fff",opacity:.82,
+    weight:9,color:"#fff",opacity:.84,
     lineCap:"round",lineJoin:"round"
   }).addTo(map);
 
   routeLine=L.polyline(latlngs,{
-    weight:5,color:"#1769aa",opacity:1,
+    weight:5,
+    color:mode==="ida"?"#1769aa":"#e56f00",
+    opacity:1,
     lineCap:"round",lineJoin:"round"
   }).addTo(map);
 
@@ -489,14 +564,17 @@ function drawGeoJSON(geo,fit){
 
 function drawSimple(points,fit){
   clearRoute();
+
   const latlngs=points.map(p=>[p.lat,p.lon]);
 
   routeOutline=L.polyline(latlngs,{
-    weight:8,color:"#fff",opacity:.75
+    weight:8,color:"#fff",opacity:.72
   }).addTo(map);
 
   routeLine=L.polyline(latlngs,{
-    weight:4,color:"#c87900",dashArray:"8 8"
+    weight:4,
+    color:mode==="ida"?"#1769aa":"#e56f00",
+    dashArray:"8 8"
   }).addTo(map);
 
   if(fit) fitRoute();
@@ -506,7 +584,7 @@ function fitRoute(){
   if(routeLine && routeLine.getBounds().isValid()){
     map.fitBounds(routeLine.getBounds(),{
       paddingTopLeft:[20,105],
-      paddingBottomRight:[20,195]
+      paddingBottomRight:[20,220]
     });
   }
 }
@@ -519,33 +597,50 @@ function render(){
   $("modeVolta").classList.toggle("active",mode==="volta");
 
   $("modeText").textContent="Modo: "+mode;
+
+  const order=activeOrder();
+  const names=order.map((p,i)=>`${i+1}. ${p.name}`).join(" → ");
+
+  $("routeSeq").innerHTML=
+    `<b>${mode==="ida"?"Sequência da ida":"Sequência da volta"}:</b> `+names;
+
   $("nextLabel").textContent=
-    mode==="ida" ? "PRÓXIMO EMBARQUE" : "PRÓXIMO DESEMBARQUE";
+    mode==="ida"?"PRÓXIMO EMBARQUE":"PRÓXIMO DESEMBARQUE";
 
   $("served").textContent=
-    mode==="ida" ? "Embarcou" : "Desembarcou";
+    mode==="ida"?"Embarcou":"Desembarcou";
 
   $("served").className=
-    "btn "+(mode==="ida" ? "green" : "orange");
+    "btn "+(mode==="ida"?"green":"orange");
 
   const done=activeDone();
   $("progressText").textContent=
-    `${done.size} de ${PEOPLE.length} concluídos`;
+    `${done.size} de ${order.length} concluídos`;
 
-  if(ordered.length){
-    $("nextName").textContent=ordered[0].name;
+  const rem=remaining();
+
+  if(rem.length){
+    const first=rem[0];
+    const originalNumber=order.findIndex(p=>p.id===first.id)+1;
+
+    $("nextName").textContent=
+      `${originalNumber}. ${first.name}`;
+
     $("nextMeta").textContent=
-      currentPosition
-      ? "Rota calculada a partir da posição atual do motorista."
-      : `Parada nº 1 da ${mode}.`;
+      first.id==="natan" && mode==="ida"
+      ? "Acesso definido via Pres. Vargas → Amazonas → Rio Grande do Sul → Rio Branco."
+      : `Próxima parada da ${mode}.`;
+
     $("served").disabled=false;
   }else{
     $("nextName").textContent=
-      mode==="ida" ? "Grupo Reunidas" : "Motorista";
+      mode==="ida"?"Grupo Reunidas":"Motorista";
+
     $("nextMeta").textContent=
       mode==="ida"
-      ? "Todos os passageiros embarcaram."
-      : "Todos os passageiros desembarcaram.";
+      ?"Todos os embarques concluídos."
+      :"Todos os desembarques concluídos.";
+
     $("served").disabled=true;
   }
 }
@@ -570,7 +665,7 @@ function activateGPS(){
     navigator.geolocation.clearWatch(watchId);
   }
 
-  $("gpsNote").textContent="Buscando sua localização…";
+  $("gpsNote").textContent="Buscando localização…";
 
   watchId=navigator.geolocation.watchPosition(
     pos=>{
@@ -590,7 +685,9 @@ function activateGPS(){
             iconAnchor:[14,14]
           }),
           zIndexOffset:3000
-        }).addTo(map).bindPopup("<b>Localização atual do motorista</b>");
+        })
+        .addTo(map)
+        .bindPopup("<b>Localização atual do motorista</b>");
 
         accuracyCircle=L.circle(ll,{
           radius:pos.coords.accuracy||15,
@@ -625,11 +722,10 @@ function activateGPS(){
 
 async function setMode(newMode){
   mode=newMode;
-  currentPosition=null;
   saveState();
 
-  /* remove apenas a indicação de GPS da rota anterior;
-     o GPS pode ser reativado pelo botão se desejado */
+  currentPosition=null;
+
   if(driverMarker){
     map.removeLayer(driverMarker);
     driverMarker=null;
@@ -639,10 +735,9 @@ async function setMode(newMode){
     accuracyCircle=null;
   }
 
-  ordered=[];
   rebuildMarkers();
   render();
-  await optimize(true);
+  await routeFixed(true);
 }
 
 $("modeIda").onclick=()=>setMode("ida");
@@ -655,29 +750,33 @@ $("center").onclick=()=>{
   if(currentPosition){
     map.setView([currentPosition.lat,currentPosition.lon],17);
   }else{
-    const s=mode==="ida" ? DRIVER : OFFICE;
+    const s=mode==="ida"?DRIVER:OFFICE;
     map.setView([s.lat,s.lon],16);
   }
 };
 
 $("fit").onclick=fitRoute;
 $("gps").onclick=activateGPS;
-$("recalc").onclick=()=>optimize(false);
+$("recalc").onclick=()=>routeFixed(false);
 
 $("served").onclick=async()=>{
-  if(!ordered.length) return;
+  const rem=remaining();
+  if(!rem.length) return;
 
-  const p=ordered[0];
-  activeDone().add(p.id);
+  activeDone().add(rem[0].id);
   saveState();
 
-  await optimize(false);
+  await routeFixed(false);
 };
 
 $("maps").onclick=()=>{
-  const s=endpointStart();
-  const e=endpointEnd();
-  const mids=ordered.length ? ordered : remaining();
+  /*
+    Google Maps recebe a ordem FIXA dos passageiros.
+    O desenho principal do HTML é que contém os pontos especiais das ruas.
+  */
+  const s=tripStart();
+  const e=tripEnd();
+  const mids=remaining();
 
   let url=
     `https://www.google.com/maps/dir/?api=1`+
@@ -694,16 +793,16 @@ $("maps").onclick=()=>{
   window.open(url,"_blank");
 };
 
-/* Duplo toque/clique no título reinicia apenas o modo atual */
+/* Duplo clique no título reinicia o modo atual */
 document.querySelector(".title-card").ondblclick=async()=>{
   if(confirm(
     mode==="ida"
-    ? "Reiniciar todos os embarques da ida?"
-    : "Reiniciar todos os desembarques da volta?"
+    ?"Reiniciar todos os embarques da ida?"
+    :"Reiniciar todos os desembarques da volta?"
   )){
     activeDone().clear();
     saveState();
-    await optimize(true);
+    await routeFixed(true);
   }
 };
 
@@ -729,7 +828,7 @@ document.addEventListener("visibilitychange",()=>{
 
 rebuildMarkers();
 render();
-optimize(true);
+routeFixed(true);
 </script>
 </body>
 </html>
