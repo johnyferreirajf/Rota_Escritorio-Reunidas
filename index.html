@@ -213,13 +213,13 @@ html,body{
 
   <details class="schedule" id="scheduleBox">
     <summary>
-      <span>Horários da IDA</span>
-      <span class="schedule-arrival">Chegada 07:00</span>
+      <span id="scheduleTitle">Horários da IDA</span>
+      <span class="schedule-arrival" id="scheduleBadge">Chegada 07:00</span>
     </summary>
     <div class="schedule-body">
       <div id="scheduleList">Calculando…</div>
-      <div class="schedule-note">
-        Estimativa para chegada às 07:00 usando o perfil de velocidade das vias e 1 minuto de parada por passageiro.
+      <div class="schedule-note" id="scheduleNote">
+        Estimativa usando o perfil de velocidade das vias e 1 minuto de parada por passageiro.
       </div>
     </div>
   </details>
@@ -230,7 +230,7 @@ html,body{
   </div>
 
   <div class="gps-note" id="gpsNote">
-    O ponto azul mostra sua localização em tempo real. O tempo usa as velocidades cadastradas das vias; não considera trânsito ao vivo.
+    O ponto azul mostra sua localização em tempo real. IDA: chegada 07:00. VOLTA: saída 16:50. O tempo usa o perfil de velocidade das vias e não considera trânsito ao vivo.
   </div>
 </div>
 
@@ -259,11 +259,13 @@ const IDA_ROUTE_LENGTH=19275.328;
 const VOLTA_ROUTE_LENGTH=19288.637;
 
 const IDA_STOP_DIST={"david":4185.011,"natan":10895.601,"paulo":11685.997,"telcio":14501.178,"igor":16373.249,"andreia":18375.325};
+const VOLTA_STOP_DIST={"andreia":900.003,"igor":2902.078,"telcio":4774.15,"paulo":7589.331,"natan":8379.726,"david":15103.627};
 
 const IDA_GMAP_SHAPE=[[-18.0131978536271,-49.35697730695183],[-18.013830676740202,-49.35862903207188],[-18.01834365061995,-49.3588432491428]];
 const VOLTA_GMAP_SHAPE=[[-18.020005360493847,-49.357060924780384],[-18.016414578031153,-49.35598685032226],[-18.0148539288736,-49.355268830058066]];
 
 const ARRIVAL_SEC=7*3600;
+const VOLTA_DEPARTURE_SEC=(16*3600)+(50*60);
 const STOP_SEC=60;
 // Usado somente se o serviço de roteamento não conseguir retornar as velocidades da via.
 const FALLBACK_SPEED=35000/3600;
@@ -569,32 +571,140 @@ function render(){
 
 function renderSchedule(totalDuration){
   const box=$("scheduleBox");
-  if(mode!=="ida"){
-    box.style.display="none";
-    return
-  }
   box.style.display="block";
 
-  const driverDeparture=
-    ARRIVAL_SEC-totalDuration-(IDA_ORDER.length*STOP_SEC);
+  if(mode==="ida"){
+    $("scheduleTitle").textContent="Horários da IDA";
+    $("scheduleBadge").textContent="Chegada 07:00";
+    $("scheduleNote").textContent=
+      "Estimativa para chegar às 07:00, usando o perfil de velocidade das vias e 1 minuto de parada por passageiro.";
 
-  let bandSec=totalDuration;
-  if(extensionPath.length>1){
-    const pr=progressOnPath(extensionPath,P.bandeirantes);
-    const extRatio=pr.total?Math.max(0,Math.min(1,pr.along/pr.total)):0.5;
-    bandSec=fixedRouteDuration+(extensionDuration*extRatio)
+    const driverDeparture=
+      ARRIVAL_SEC-totalDuration-(IDA_ORDER.length*STOP_SEC);
+
+    let bandSec=totalDuration;
+    if(extensionPath.length>1){
+      const pr=progressOnPath(extensionPath,P.bandeirantes);
+      const extRatio=
+        pr.total?Math.max(0,Math.min(1,pr.along/pr.total)):0.5;
+
+      bandSec=
+        fixedRouteDuration+
+        (extensionDuration*extRatio);
+    }
+
+    const rows=[
+      ["S","Motorista",driverDeparture,"driver"],
+      ["1","David",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.david)+
+        0*STOP_SEC,""],
+      ["2","Natan",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.natan)+
+        1*STOP_SEC,""],
+      ["3","Paulo",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.paulo)+
+        2*STOP_SEC,""],
+      ["4","Télcio",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.telcio)+
+        3*STOP_SEC,""],
+      ["5","Igor",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.igor)+
+        4*STOP_SEC,""],
+      ["6","Andreia",
+        driverDeparture+
+        fixedTimeAtDistance(IDA_STOP_DIST.andreia)+
+        5*STOP_SEC,""],
+      ["7","Faz. Bandeirantes",
+        driverDeparture+
+        bandSec+
+        6*STOP_SEC,""],
+      ["F","Grupo Reunidas",ARRIVAL_SEC,"office"]
+    ];
+
+    $("scheduleList").innerHTML=rows.map(r=>`
+      <div class="schedule-row ${r[3]}">
+        <div class="schedule-num">${r[0]}</div>
+        <div>${r[1]}</div>
+        <div class="schedule-time">${formatClock(r[2])}</div>
+      </div>
+    `).join("");
+
+    return;
   }
 
+  // VOLTA: saída fixa do escritório às 16:50.
+  $("scheduleTitle").textContent="Horários da VOLTA";
+  $("scheduleBadge").textContent="Saída 16:50";
+  $("scheduleNote").textContent=
+    "Saída do Grupo Reunidas às 16:50. Horários estimados de chegada usando o perfil de velocidade das vias e 1 minuto de parada em cada desembarque.";
+
+  let bandTravelSec=0;
+
+  if(extensionPath.length>1){
+    const pr=progressOnPath(extensionPath,P.bandeirantes);
+    const extRatio=
+      pr.total?Math.max(0,Math.min(1,pr.along/pr.total)):0.5;
+
+    bandTravelSec=extensionDuration*extRatio;
+  }else{
+    bandTravelSec=extensionDuration*0.5;
+  }
+
+  const base=VOLTA_DEPARTURE_SEC;
+
   const rows=[
-    ["S","Motorista",driverDeparture,"driver"],
-    ["1","David",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.david)+0*STOP_SEC,""],
-    ["2","Natan",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.natan)+1*STOP_SEC,""],
-    ["3","Paulo",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.paulo)+2*STOP_SEC,""],
-    ["4","Télcio",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.telcio)+3*STOP_SEC,""],
-    ["5","Igor",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.igor)+4*STOP_SEC,""],
-    ["6","Andreia",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.andreia)+5*STOP_SEC,""],
-    ["7","Faz. Bandeirantes",driverDeparture+bandSec+6*STOP_SEC,""],
-    ["F","Grupo Reunidas",ARRIVAL_SEC,"office"]
+    ["S","Grupo Reunidas",base,"driver"],
+
+    ["1","Faz. Bandeirantes",
+      base+
+      bandTravelSec,""],
+
+    ["2","Andreia",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.andreia)+
+      1*STOP_SEC,""],
+
+    ["3","Igor",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.igor)+
+      2*STOP_SEC,""],
+
+    ["4","Télcio",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.telcio)+
+      3*STOP_SEC,""],
+
+    ["5","Paulo",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.paulo)+
+      4*STOP_SEC,""],
+
+    ["6","Natan",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.natan)+
+      5*STOP_SEC,""],
+
+    ["7","David",
+      base+
+      extensionDuration+
+      fixedTimeAtDistance(VOLTA_STOP_DIST.david)+
+      6*STOP_SEC,""],
+
+    ["F","Motorista",
+      base+
+      extensionDuration+
+      fixedRouteDuration+
+      7*STOP_SEC,"office"]
   ];
 
   $("scheduleList").innerHTML=rows.map(r=>`
@@ -603,7 +713,7 @@ function renderSchedule(totalDuration){
       <div>${r[1]}</div>
       <div class="schedule-time">${formatClock(r[2])}</div>
     </div>
-  `).join("")
+  `).join("");
 }
 
 function fitRoute(){
