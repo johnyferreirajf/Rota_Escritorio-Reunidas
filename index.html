@@ -10,9 +10,8 @@
 
 <style>
 html,body{
-  margin:0;padding:0;width:100%;height:100%;
-  overflow:hidden;background:#111;
-  font-family:Arial,Helvetica,sans-serif
+  margin:0;padding:0;width:100%;height:100%;overflow:hidden;
+  background:#111;font-family:Arial,Helvetica,sans-serif
 }
 #map{position:fixed;inset:0;width:100%;height:100%;z-index:1;background:#111}
 .leaflet-container{background:#111}
@@ -30,278 +29,156 @@ html,body{
 .title-card{flex:1;min-width:0}
 .title{font-size:15px;font-weight:800;color:#10263a}
 .sub{
-  margin-top:4px;font-size:11px;color:#667480;
+  margin-top:3px;font-size:10px;color:#667480;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis
 }
 .metric{min-width:67px;text-align:center}
 .metric b{display:block;font-size:14px;color:#10263a}
-.metric span{font-size:10px;color:#667480}
+.metric span{font-size:9px;color:#667480}
 
 .tools{
   position:fixed;z-index:1000;right:12px;top:105px;
-  display:flex;flex-direction:column;gap:8px
+  display:flex;flex-direction:column;gap:7px
 }
 .fab{
-  width:48px;height:48px;border:0;border-radius:14px;background:#fff;
+  width:46px;height:46px;border:0;border-radius:13px;background:#fff;
   color:#10263a;box-shadow:0 4px 16px rgba(0,0,0,.25);
-  font-size:24px;font-weight:bold
+  font-size:22px;font-weight:bold
 }
 
 .bottom{
   position:fixed;z-index:1000;left:10px;right:10px;bottom:10px;
-  background:rgba(255,255,255,.97);border-radius:18px;padding:12px;
+  background:rgba(255,255,255,.97);border-radius:16px;padding:10px;
   box-shadow:0 4px 20px rgba(0,0,0,.28);
-  max-height:68vh;overflow-y:auto
+  max-height:48vh;overflow-y:auto
 }
-.mode{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:7px}
 .mode button{
   border:1px solid #ccd7df;background:#eef3f6;color:#29455c;
-  border-radius:11px;min-height:39px;font-weight:800;font-size:12px
+  border-radius:10px;min-height:36px;font-weight:800;font-size:11px
 }
 .mode button.active{background:#102f4d;color:#fff;border-color:#102f4d}
 
-.route-seq{
-  margin-bottom:8px;padding:7px 9px;border-radius:10px;background:#eef4f8;
-  font-size:10px;line-height:1.35;color:#395369;
-  white-space:nowrap;overflow-x:auto
+.sequence{
+  padding:6px 8px;border-radius:9px;background:#eef4f8;
+  font-size:9px;line-height:1.35;color:#395369;
+  white-space:nowrap;overflow-x:auto;margin-bottom:6px
 }
-.route-seq b{color:#10263a}
-
-.ref-badge{
-  display:inline-block;margin-left:4px;padding:2px 6px;border-radius:999px;
-  background:#dff3e8;color:#176842;font-weight:800
-}
-
+.sequence b{color:#10263a}
 
 .schedule{
-  margin-bottom:9px;border:1px solid #d9e4ec;border-radius:12px;
+  margin-bottom:7px;border:1px solid #d9e4ec;border-radius:10px;
   background:#f7fafc;overflow:hidden
 }
 .schedule summary{
-  cursor:pointer;list-style:none;padding:9px 10px;
-  font-size:11px;font-weight:800;color:#123a5a;
-  display:flex;align-items:center;justify-content:space-between;gap:8px
+  cursor:pointer;list-style:none;padding:7px 8px;
+  font-size:10px;font-weight:800;color:#123a5a;
+  display:flex;align-items:center;justify-content:space-between;gap:6px
 }
 .schedule summary::-webkit-details-marker{display:none}
 .schedule-arrival{
-  flex:none;background:#1769aa;color:#fff;border-radius:999px;
-  padding:3px 7px;font-size:10px
+  background:#1769aa;color:#fff;border-radius:999px;
+  padding:2px 6px;font-size:8px;white-space:nowrap
 }
-.schedule-body{padding:0 9px 8px}
+.schedule-body{padding:0 8px 7px}
 .schedule-row{
-  display:grid;grid-template-columns:24px 1fr auto;
-  gap:7px;align-items:center;padding:5px 0;
-  border-top:1px solid #e6edf2;font-size:11px
+  display:grid;grid-template-columns:22px 1fr auto;gap:6px;
+  align-items:center;padding:4px 0;border-top:1px solid #e6edf2;
+  font-size:10px
 }
 .schedule-num{
-  width:22px;height:22px;border-radius:50%;
-  display:grid;place-items:center;background:#e5eef5;
-  color:#234b68;font-weight:800;font-size:10px
+  width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
+  background:#e5eef5;color:#234b68;font-weight:800;font-size:9px
 }
 .schedule-row.driver .schedule-num{background:#2f8f5b;color:#fff}
 .schedule-row.office .schedule-num{background:#10263a;color:#fff}
-.schedule-name{color:#334d60}
-.schedule-time{font-size:12px;font-weight:900;color:#10263a}
-.schedule-note{
-  padding-top:6px;border-top:1px solid #e6edf2;
-  font-size:9px;line-height:1.35;color:#72818d
-}
+.schedule-time{font-size:11px;font-weight:900;color:#10263a}
+.schedule-note{font-size:8px;line-height:1.3;color:#72818d;padding-top:5px}
 
-.eyebrow{font-size:10px;font-weight:bold;letter-spacing:.08em;color:#1769aa}
-.next{font-size:20px;font-weight:800;color:#10263a;margin-top:2px}
-.nextmeta{font-size:11px;color:#667480;margin-top:3px}
-
-.actions{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:7px;margin-top:10px
-}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .btn{
-  min-height:42px;border:1px solid #d8e0e6;border-radius:11px;
-  background:#fff;color:#10263a;font-size:11px;font-weight:700
+  min-height:38px;border:1px solid #d8e0e6;border-radius:10px;
+  background:#fff;color:#10263a;font-size:10px;font-weight:800
 }
 .btn.primary{background:#1769aa;color:#fff;border-color:#1769aa}
-.btn.green{background:#2f8f5b;color:#fff;border-color:#2f8f5b}
-.btn.orange{background:#c87900;color:#fff;border-color:#c87900}
-.btn:disabled{opacity:.5}
 
-.progress{
-  margin-top:8px;font-size:10px;color:#667480;
-  display:flex;justify-content:space-between;gap:10px
-}
-.gps-note{margin-top:5px;font-size:10px;line-height:1.3;color:#667480}
+.gps-note{margin-top:5px;font-size:8px;line-height:1.25;color:#667480}
 
 .driver-dot{
-  position:relative;
-  width:18px;height:18px;border-radius:50%;
-  background:#1677ff;
-  border:3px solid #fff;
-  box-shadow:0 0 0 4px rgba(22,119,255,.24),0 2px 8px rgba(0,0,0,.25);
+  position:relative;width:18px;height:18px;border-radius:50%;
+  background:#1677ff;border:3px solid #fff;
+  box-shadow:0 0 0 4px rgba(22,119,255,.24),0 2px 8px rgba(0,0,0,.25)
 }
 .driver-dot::after{
-  content:"";
-  position:absolute;
-  left:50%;top:50%;
-  width:30px;height:30px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:rgba(22,119,255,.20);
-  animation:gpsPulse 1.8s infinite ease-out;
-  z-index:-1;
+  content:"";position:absolute;left:50%;top:50%;width:30px;height:30px;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:rgba(22,119,255,.20);animation:gpsPulse 1.8s infinite ease-out;
+  z-index:-1
 }
 @keyframes gpsPulse{
   0%{transform:translate(-50%,-50%) scale(.55);opacity:.9}
   70%{transform:translate(-50%,-50%) scale(1.35);opacity:0}
   100%{transform:translate(-50%,-50%) scale(1.35);opacity:0}
 }
+
 .pin{
-  width:32px;height:32px;border-radius:50%;border:3px solid #fff;
+  width:30px;height:30px;border-radius:50%;border:3px solid #fff;
   background:#1769aa;color:#fff;display:grid;place-items:center;
-  font-size:11px;font-weight:800;box-shadow:0 3px 10px rgba(0,0,0,.35)
+  font-size:10px;font-weight:800;box-shadow:0 3px 10px rgba(0,0,0,.35)
 }
 .pin.start{background:#2f8f5b}
 .pin.end{background:#10263a}
-.pin.done{background:#7e8d97}
 
-
-@media(max-width:600px){
-  .top{
-    top:6px;left:6px;right:6px;
-    gap:4px
-  }
-
-  .card{
-    padding:6px 8px;
-    border-radius:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,.20)
-  }
-
-  .title{
-    font-size:12px;
-    line-height:1.1
-  }
-
-  .sub{
-    font-size:9px;
-    margin-top:2px;
-    max-width:70vw
-  }
-
-  .metric{
-    display:block
-  }
-
-  .tools{
-    right:7px;
-    top:68px;
-    gap:5px
-  }
-
-  .fab{
-    width:38px;
-    height:38px;
-    border-radius:10px;
-    font-size:19px;
-    box-shadow:0 2px 10px rgba(0,0,0,.20)
-  }
-
-  .bottom{
-    left:6px;
-    right:6px;
-    bottom:6px;
-    padding:7px;
-    border-radius:12px;
-    max-height:34vh;
-    overflow-y:auto;
-    box-shadow:0 2px 12px rgba(0,0,0,.24)
-  }
-
-  .mode{
-    gap:4px;
-    margin-bottom:5px
-  }
-
-  .mode button{
-    min-height:30px;
-    border-radius:8px;
-    font-size:10px;
-    padding:2px 4px
-  }
-
-  .route-seq{
-    display:none
-  }
-
-  
-
-
-/* Cabeçalho móvel: título + distância + estimativa na mesma faixa superior */
-@media(max-width:600px){
-  .top{
-    top:5px;
-    left:5px;
-    right:5px;
-    gap:3px;
-    align-items:stretch;
-  }
-
-  .top .card{
-    border-radius:9px;
-    padding:5px 6px;
-    box-shadow:0 2px 9px rgba(0,0,0,.22);
-  }
-
-  .title-card{
-    flex:1 1 auto;
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-  }
-
-  .title{
-    font-size:10.5px;
-    line-height:1.05;
-    white-space:nowrap;
-  }
-
-  .sub{
-    margin-top:2px;
-    font-size:7px;
-    line-height:1;
-    max-width:100%;
-  }
-
-  .metric{
-    display:flex !important;
-    flex:0 0 54px;
-    min-width:54px;
-    padding:4px 3px !important;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-  }
-
-  .metric b{
-    display:block;
-    font-size:10px;
-    line-height:1.05;
-    white-space:nowrap;
-  }
-
-  .metric span{
-    display:block;
-    margin-top:1px;
-    font-size:6.2px;
-    line-height:1;
-    white-space:nowrap;
-  }
-
-  .tools{
-    top:58px;
-  }
+#panelToggle{
+  position:fixed;z-index:1002;left:9px;bottom:9px;
+  width:36px;height:36px;border:0;border-radius:50%;
+  background:#102f4d;color:#fff;font-size:17px;font-weight:bold;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);display:none
 }
 
+@media(max-width:600px){
+  .top{top:5px;left:5px;right:5px;gap:3px;align-items:stretch}
+  .top .card{border-radius:9px;padding:5px 6px;box-shadow:0 2px 9px rgba(0,0,0,.22)}
+  .title-card{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:center}
+  .title{font-size:10.5px;line-height:1.05;white-space:nowrap}
+  .sub{font-size:7px;line-height:1;margin-top:2px}
+  .metric{
+    display:flex!important;flex:0 0 54px;min-width:54px;padding:4px 3px!important;
+    flex-direction:column;align-items:center;justify-content:center
+  }
+  .metric b{font-size:10px;line-height:1.05;white-space:nowrap}
+  .metric span{font-size:6.2px;line-height:1;white-space:nowrap;margin-top:1px}
+
+  .tools{right:7px;top:58px;gap:5px}
+  .fab{width:37px;height:37px;border-radius:10px;font-size:18px}
+
+  .bottom{
+    left:6px;right:6px;bottom:6px;padding:7px;border-radius:12px;
+    max-height:31vh;box-shadow:0 2px 12px rgba(0,0,0,.24)
+  }
+  .mode{gap:4px;margin-bottom:5px}
+  .mode button{min-height:30px;border-radius:8px;font-size:9px;padding:2px 4px}
+  .sequence{display:none}
+  .schedule{margin-bottom:5px;border-radius:8px}
+  .schedule summary{padding:5px 7px;font-size:9px}
+  .schedule-arrival{font-size:7px}
+  .schedule-body{padding:0 6px 5px}
+  .schedule-row{grid-template-columns:19px 1fr auto;gap:4px;padding:3px 0;font-size:9px}
+  .schedule-num{width:18px;height:18px;font-size:8px}
+  .schedule-time{font-size:10px}
+  .schedule-note{display:none}
+  .actions{gap:4px}
+  .btn{min-height:33px;border-radius:8px;font-size:9px}
+  .gps-note{display:none}
+  #panelToggle{display:block}
+  body.panel-collapsed .bottom{display:none}
+}
+
+@media(min-width:700px){
+  .bottom{width:420px;right:auto}
+  .top{max-width:760px}
+}
 </style>
 </head>
 
@@ -318,30 +195,13 @@ html,body{
 </div>
 
 <div class="tools">
-  <button class="fab" id="zin">+</button>
-  <button class="fab" id="zout">−</button>
-  <button class="fab" id="center">⌖</button>
-  <button class="fab" id="fit">⤢</button>
+  <button class="fab" id="zin" aria-label="Aumentar zoom">+</button>
+  <button class="fab" id="zout" aria-label="Diminuir zoom">−</button>
+  <button class="fab" id="center" aria-label="Centralizar">⌖</button>
+  <button class="fab" id="fit" aria-label="Ver rota inteira">⤢</button>
 </div>
 
-
-<button id="panelToggle" aria-label="Mostrar ou ocultar informações"
-style="
-  position:fixed;
-  z-index:1002;
-  left:10px;
-  bottom:10px;
-  width:38px;
-  height:38px;
-  border:0;
-  border-radius:50%;
-  background:#102f4d;
-  color:#fff;
-  font-size:18px;
-  font-weight:bold;
-  box-shadow:0 2px 10px rgba(0,0,0,.3);
-  display:none;
-">⌃</button>
+<button id="panelToggle" aria-label="Mostrar ou ocultar informações">⌃</button>
 
 <div class="bottom" id="bottomPanel">
   <div class="mode">
@@ -349,109 +209,80 @@ style="
     <button id="modeVolta">VOLTA → Casas</button>
   </div>
 
-  <div class="route-seq" id="routeSeq"></div>
-<details class="schedule" id="scheduleBox">
+  <div class="sequence" id="routeSeq"></div>
+
+  <details class="schedule" id="scheduleBox">
     <summary>
-      <span>Horários da IDA para chegar às 07:00</span>
+      <span>Horários da IDA</span>
       <span class="schedule-arrival">Chegada 07:00</span>
     </summary>
     <div class="schedule-body">
-      <div id="scheduleList">Calculando horários…</div>
+      <div id="scheduleList">Calculando…</div>
       <div class="schedule-note">
-        Horários estimados pelo percurso definido. Inclui 1 minuto de parada em cada embarque.
-        Trânsito, chuva e outras condições podem alterar o tempo real.
+        Estimativa para chegada às 07:00 usando o perfil de velocidade das vias e 1 minuto de parada por passageiro.
       </div>
     </div>
   </details>
 
-
-  <div class="eyebrow" id="nextLabel">PRÓXIMO EMBARQUE</div>
-  <div class="next" id="nextName">Calculando…</div>
-  <div class="nextmeta" id="nextMeta">Aguarde.</div>
-
   <div class="actions">
     <button class="btn primary" id="gps">Ativar GPS</button>
-    <button class="btn" id="recalc">Recarregar</button>
     <button class="btn" id="maps">Google Maps</button>
-    <button class="btn green" id="served">Embarcou</button>
-  </div>
-
-  <div class="progress">
-    <span id="progressText">0 de 8 concluídos</span>
-    <span id="modeText">Modo: ida</span>
   </div>
 
   <div class="gps-note" id="gpsNote">
-    Na IDA, os horários são calculados para chegada ao escritório às 07:00. Na Faz. Bandeirantes, a rota passa direto pela via principal, sem entrar.
+    O ponto azul mostra sua localização em tempo real. O tempo usa as velocidades cadastradas das vias; não considera trânsito ao vivo.
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const DRIVER={id:"motorista",name:"Motorista",lat:-17.997716,lon:-49.363442};
-const OFFICE={id:"reunidas",name:"Grupo Reunidas",lat:-17.964560,lon:-50.008964};
+const DRIVER={name:"Motorista",lat:-17.997716,lon:-49.363442};
+const OFFICE={name:"Grupo Reunidas",lat:-17.964560,lon:-50.008964};
 
 const P={
-  david:{id:"david",name:"David",lat:-18.0114722222,lon:-49.3354722222},
-  natan:{id:"natan",name:"Natan",lat:-18.0340000000,lon:-49.3700833333},
-  paulo:{id:"paulo",name:"Paulo",lat:-18.036596,lon:-49.374805},
-  telcio:{id:"telcio",name:"Télcio",lat:-18.015975,lon:-49.372719},
-  igor:{id:"igor",name:"Igor",lat:-18.0093055556,lon:-49.3623333333},
-  patricia:{id:"patricia",name:"Patrícia",lat:-18.0018333333,lon:-49.3636666667},
-  andreia:{id:"andreia",name:"Andreia",lat:-17.99549403666936,lon:-49.36505424068929},
-  bandeirantes:{id:"bandeirantes",name:"Faz. Bandeirantes",lat:-17.998239,lon:-49.526376}
+  david:{name:"David",lat:-18.0114722222,lon:-49.3354722222},
+  natan:{name:"Natan",lat:-18.0340000000,lon:-49.3700833333},
+  paulo:{name:"Paulo",lat:-18.036596,lon:-49.374805},
+  telcio:{name:"Télcio",lat:-18.015975,lon:-49.372719},
+  igor:{name:"Igor",lat:-18.0093055556,lon:-49.3623333333},
+  andreia:{name:"Andreia",lat:-17.99549403666936,lon:-49.36505424068929},
+  bandeirantes:{name:"Faz. Bandeirantes",lat:-17.998239,lon:-49.526376}
 };
 
-const IDA_ORDER=[P.david,P.natan,P.paulo,P.telcio,P.igor,P.patricia,P.andreia,P.bandeirantes];
-const VOLTA_ORDER=[...IDA_ORDER].reverse();
+const IDA_ORDER=[P.david,P.natan,P.paulo,P.telcio,P.igor,P.andreia,P.bandeirantes];
+const VOLTA_ORDER=[P.bandeirantes,P.andreia,P.igor,P.telcio,P.paulo,P.natan,P.david];
 
-/* GEOMETRIA EXATA DO rota ENVIADO PELO USUÁRIO */
-const REFERENCE_ROUTE=[[-17.998080769648205,-49.363059238391465],[-17.999649246712718,-49.36093829292004],[-17.999381550893332,-49.359907553064765],[-18.000927394388885,-49.35807204324555],[-18.000991490046104,-49.357957076107844],[-18.000916083388127,-49.35750910070922],[-18.002005706462015,-49.34391522777182],[-18.002066031418167,-49.343498967445655],[-18.002288479515634,-49.34305495643107],[-18.00282009162871,-49.342591123496184],[-18.003498743060785,-49.342460298822246],[-18.005086023154153,-49.342484085126614],[-18.011359598407857,-49.34270609063392],[-18.011389759287937,-49.34063668215525],[-18.01301466907205,-49.34007770400297],[-18.01175168944642,-49.33605385418335],[-18.011555644036193,-49.3354433390383],[-18.011046678972274,-49.333817941574225],[-18.011668747184093,-49.33358007853071],[-18.013648040520827,-49.339831912191315],[-18.01482806577853,-49.339395829944856],[-18.0149185466222,-49.3392768984231],[-18.01503164761147,-49.339268969654974],[-18.015061807863013,-49.33940772309704],[-18.014877076241294,-49.33955044092314],[-18.013908174563422,-49.342218471394695],[-18.01370836149245,-49.34280520023539],[-18.013862933887967,-49.34297566874993],[-18.013510433227037,-49.348398946142304],[-18.013367170724788,-49.35169731367916],[-18.013325699978722,-49.351978784947335],[-18.01341241152756,-49.352153217845924],[-18.01307310522367,-49.35853191179645],[-18.01306179500229,-49.35863102139792],[-18.013122116174596,-49.35868255839068],[-18.013299309498844,-49.358615163861685],[-18.014245594234918,-49.3586904871588],[-18.02005514331274,-49.35894024335449],[-18.019866646999137,-49.368133649986746],[-18.02276946785971,-49.36823672397227],[-18.026803178440804,-49.368387370566516],[-18.029200742062034,-49.36932296520438],[-18.0331513731435,-49.36868866375499],[-18.03309859812184,-49.36972733237837],[-18.033976923208034,-49.369790762523316],[-18.033950535822974,-49.37009602009583],[-18.033935457315444,-49.37088889690759],[-18.036415854429784,-49.37098800650905],[-18.036325384632693,-49.37469470560399],[-18.037120763338958,-49.37473831382863],[-18.03710568510307,-49.37593952219842],[-18.03289126752637,-49.375741302995486],[-18.027425191007538,-49.375558941328784],[-18.016877068495177,-49.37518628922727],[-18.016730038735144,-49.37511493031422],[-18.016865758517998,-49.372621332741254],[-18.015632966651843,-49.37264908342966],[-18.01254906420382,-49.37264908342968],[-18.01294869274853,-49.362373399949384],[-18.00861305162678,-49.362183109514554],[-18.007587562650784,-49.36215139444208],[-18.00695416942026,-49.36216725197831],[-18.00591358988618,-49.36199281907974],[-18.00564213334529,-49.36312663292054],[-18.004993652138886,-49.36308698907995],[-18.004978571152222,-49.362825339732076],[-18.003809790760723,-49.36263504929726],[-18.003244249079856,-49.362658835601614],[-18.0025278936798,-49.362888769877024],[-18.002739030310746,-49.363546857630766],[-18.000280781014393,-49.36439523581935],[-18.000235536841135,-49.36592548806602],[-17.998893287753596,-49.365798627776144],[-17.996276626735423,-49.365830342848625],[-17.995703520004287,-49.365378403065925],[-17.99562811108523,-49.365188112631095],[-17.995462211349864,-49.365085038645574],[-17.995303852366003,-49.36515639755862],[-17.995228443276073,-49.36542597567463],[-17.993557181046455,-49.36784226775843],[-17.990499286323796,-49.37174322167223]];
-const REFERENCE_ROUTE_LENGTH=19229.385;
+const IDA_ROUTE=[[-17.998229768187336,-49.362891583073804],[-17.999649246712718,-49.36093829292004],[-17.999381550893332,-49.359907553064765],[-18.000927394388885,-49.35807204324555],[-18.000991490046104,-49.357957076107844],[-18.000916083388127,-49.35750910070922],[-18.002005706462015,-49.34391522777182],[-18.002066031418167,-49.343498967445655],[-18.002288479515634,-49.34305495643107],[-18.00282009162871,-49.342591123496184],[-18.003498743060785,-49.342460298822246],[-18.005086023154153,-49.342484085126614],[-18.011359598407857,-49.34270609063392],[-18.011389759287937,-49.34063668215525],[-18.01301466907205,-49.34007770400297],[-18.01175168944642,-49.33605385418335],[-18.011555644036193,-49.3354433390383],[-18.011046678972274,-49.333817941574225],[-18.011668747184093,-49.33358007853071],[-18.013648040520827,-49.339831912191315],[-18.01482806577853,-49.339395829944856],[-18.0149185466222,-49.3392768984231],[-18.01503164761147,-49.339268969654974],[-18.015061807863013,-49.33940772309704],[-18.014877076241294,-49.33955044092314],[-18.013903102701764,-49.34239809196447],[-18.014113989182587,-49.34253413177193],[-18.01416337011319,-49.34285840499689],[-18.013862933887967,-49.34297566874993],[-18.013510433227037,-49.348398946142304],[-18.013367170724788,-49.35169731367916],[-18.013325699978722,-49.351978784947335],[-18.01341241152756,-49.352153217845924],[-18.013394343007,-49.352750712651556],[-18.01312260470802,-49.35859542213735],[-18.019991856904262,-49.35892148467518],[-18.02005514331274,-49.35894024335449],[-18.019866646999137,-49.368133649986746],[-18.02276946785971,-49.36823672397227],[-18.026803178440804,-49.368387370566516],[-18.029200742062034,-49.36932296520438],[-18.0331513731435,-49.36868866375499],[-18.03309859812184,-49.36972733237837],[-18.033976923208034,-49.369790762523316],[-18.033950535822974,-49.37009602009583],[-18.033935457315444,-49.37088889690759],[-18.036415854429784,-49.37098800650905],[-18.036296370965992,-49.37473223415509],[-18.037120763338958,-49.37473831382863],[-18.037114894528575,-49.37600557448577],[-18.036268091269655,-49.37598898640753],[-18.03289126752637,-49.375741302995486],[-18.027425191007538,-49.375558941328784],[-18.016877068495177,-49.37518628922727],[-18.016730038735144,-49.37511493031422],[-18.016865758517998,-49.372621332741254],[-18.015632966651843,-49.37264908342966],[-18.016123538414185,-49.36246451829037],[-18.01294869274853,-49.362373399949384],[-18.00861305162678,-49.362183109514554],[-18.007588771531704,-49.362097887234455],[-18.006967348452118,-49.36209551024482],[-18.00591358988618,-49.36199281907974],[-18.00564213334529,-49.36312663292054],[-18.005501745659377,-49.36376513119477],[-18.005732619061245,-49.363970011155565],[-18.005799940876017,-49.3641236331794],[-18.00563954325484,-49.36444577635173],[-18.005368214454332,-49.364509164556324],[-18.004927604609232,-49.366603621240365],[-18.000235536841135,-49.36592548806602],[-17.998893287753596,-49.365798627776144],[-17.996276626735423,-49.365830342848625],[-17.995703520004287,-49.365378403065925],[-17.99562811108523,-49.365188112631095],[-17.995462211349864,-49.365085038645574],[-17.995303852366003,-49.36515639755862],[-17.995228443276073,-49.36542597567463],[-17.993557181046455,-49.36784226775843],[-17.990499286323796,-49.37174322167223]];
+const VOLTA_ROUTE=[[-17.990499286323796,-49.37174322167223],[-17.993557181046455,-49.36784226775843],[-17.995228443276073,-49.36542597567463],[-17.995303852366003,-49.36515639755862],[-17.995462211349864,-49.365085038645574],[-17.99562811108523,-49.365188112631095],[-17.995703520004287,-49.365378403065925],[-17.996276626735423,-49.365830342848625],[-17.998893287753596,-49.365798627776144],[-18.000235536841135,-49.36592548806602],[-18.004927604609232,-49.366603621240365],[-18.005368214454332,-49.364509164556324],[-18.00563954325484,-49.36444577635173],[-18.005799940876017,-49.3641236331794],[-18.005732619061245,-49.363970011155565],[-18.005501745659377,-49.36376513119477],[-18.00564213334529,-49.36312663292054],[-18.00591358988618,-49.36199281907974],[-18.006967348452118,-49.36209551024482],[-18.007588771531704,-49.362097887234455],[-18.00861305162678,-49.362183109514554],[-18.01294869274853,-49.362373399949384],[-18.016123538414185,-49.36246451829037],[-18.015632966651843,-49.37264908342966],[-18.016865758517998,-49.372621332741254],[-18.016730038735144,-49.37511493031422],[-18.016877068495177,-49.37518628922727],[-18.027425191007538,-49.375558941328784],[-18.03289126752637,-49.375741302995486],[-18.036268091269655,-49.37598898640753],[-18.037114894528575,-49.37600557448577],[-18.037120763338958,-49.37473831382863],[-18.036296370965992,-49.37473223415509],[-18.036415854429784,-49.37098800650905],[-18.033935457315444,-49.37088889690759],[-18.033950535822974,-49.37009602009583],[-18.033976923208034,-49.369790762523316],[-18.03309859812184,-49.36972733237837],[-18.0331513731435,-49.36868866375499],[-18.029200742062034,-49.36932296520438],[-18.026803178440804,-49.368387370566516],[-18.02276946785971,-49.36823672397227],[-18.019866646999137,-49.368133649986746],[-18.02005514331274,-49.35894024335449],[-18.0200450240889,-49.35706282522919],[-18.01635395413737,-49.35688597094502],[-18.016422079040343,-49.355875597530634],[-18.014782470385605,-49.35579744822354],[-18.015169789776962,-49.35293209663597],[-18.014524822449,-49.352786885623495],[-18.013394343007,-49.352750712651556],[-18.01341241152756,-49.352153217845924],[-18.013325699978722,-49.351978784947335],[-18.013367170724788,-49.35169731367916],[-18.013510433227037,-49.348398946142304],[-18.013862933887967,-49.34297566874993],[-18.01416337011319,-49.34285840499689],[-18.014113989182587,-49.34253413177193],[-18.013903102701764,-49.34239809196447],[-18.014877076241294,-49.33955044092314],[-18.015061807863013,-49.33940772309704],[-18.01503164761147,-49.339268969654974],[-18.0149185466222,-49.3392768984231],[-18.01482806577853,-49.339395829944856],[-18.013648040520827,-49.339831912191315],[-18.011668747184093,-49.33358007853071],[-18.011046678972274,-49.333817941574225],[-18.011555644036193,-49.3354433390383],[-18.01175168944642,-49.33605385418335],[-18.01301466907205,-49.34007770400297],[-18.011389759287937,-49.34063668215525],[-18.011359598407857,-49.34270609063392],[-18.005086023154153,-49.342484085126614],[-18.003498743060785,-49.342460298822246],[-18.00282009162871,-49.342591123496184],[-18.002288479515634,-49.34305495643107],[-18.002066031418167,-49.343498967445655],[-18.002005706462015,-49.34391522777182],[-18.000916083388127,-49.35750910070922],[-18.000991490046104,-49.357957076107844],[-18.000927394388885,-49.35807204324555],[-17.999381550893332,-49.359907553064765],[-17.999649246712718,-49.36093829292004],[-17.998229768187336,-49.362891583073804]];
 
-/*
-  HORÁRIO-ALVO DA IDA
-  Chegada ao Grupo Reunidas: 07:00.
-  Para o trecho urbano da rota, o tempo é estimado a 35 km/h.
-  A extensão até o escritório usa a duração retornada pelo roteador.
-  Considera 1 minuto parado em cada um dos 8 embarques.
-*/
-const ARRIVAL_TARGET_SEC = 7 * 3600;
-const BOARDING_SEC = 60;
-const URBAN_SPEED_MPS = 35000 / 3600;
+const IDA_ROUTE_LENGTH=19275.328;
+const VOLTA_ROUTE_LENGTH=19288.637;
 
-/*
-  Distância acumulada de cada parada sobre a rota,
-  calculada por projeção geométrica no arquivo enviado.
-*/
-const REF_STOP_DISTANCE = {
-  motorista: 0,
-  david: 4209.134,
-  natan: 10908.656,
-  paulo: 11692.292,
-  telcio: 14498.608,
-  igor: 16369.680,
-  patricia: 17419.828,
-  andreia: 18329.382
-};
+const IDA_STOP_DIST={"david":4185.011,"natan":10895.601,"paulo":11685.997,"telcio":14501.178,"igor":16373.249,"andreia":18375.325};
 
-let extensionPath = [];
-let scheduleTimes = {};
+const IDA_GMAP_SHAPE=[[-18.0131978536271,-49.35697730695183],[-18.013830676740202,-49.35862903207188],[-18.01834365061995,-49.3588432491428]];
+const VOLTA_GMAP_SHAPE=[[-18.020005360493847,-49.357060924780384],[-18.016414578031153,-49.35598685032226],[-18.0148539288736,-49.355268830058066]];
 
+const ARRIVAL_SEC=7*3600;
+const STOP_SEC=60;
+// Usado somente se o serviço de roteamento não conseguir retornar as velocidades da via.
+const FALLBACK_SPEED=35000/3600;
 
-let mode=localStorage.getItem("reunidas_mode_shp")||"ida";
-let idaDone=new Set(JSON.parse(localStorage.getItem("reunidas_ida_done_shp")||"[]"));
-let voltaDone=new Set(JSON.parse(localStorage.getItem("reunidas_volta_done_shp")||"[]"));
-
+let mode=localStorage.getItem("reunidas_modo_duas_rotas")||"ida";
 let currentPosition=null;
 let watchId=null;
 let driverMarker=null;
 let accuracyCircle=null;
 let routeLayers=[];
-let passengerMarkers=[];
-let endpointMarkers=[];
+let markerLayers=[];
+let extensionPath=[];
 let extensionDistance=0;
 let extensionDuration=0;
+
+let fixedRouteDistance=0;
+let fixedRouteDuration=0;
+let fixedLegDurations=[];
+let fixedGeoCum=[];
 
 const $=id=>document.getElementById(id);
 
@@ -470,186 +301,154 @@ const googleHybrid=L.tileLayer(
   }
 ).addTo(map);
 
-function activeOrder(){return mode==="ida"?IDA_ORDER:VOLTA_ORDER}
-function activeDone(){return mode==="ida"?idaDone:voltaDone}
-function remaining(){const d=activeDone();return activeOrder().filter(p=>!d.has(p.id))}
-
-function saveState(){
-  localStorage.setItem("reunidas_mode_shp",mode);
-  localStorage.setItem("reunidas_ida_done_shp",JSON.stringify([...idaDone]));
-  localStorage.setItem("reunidas_volta_done_shp",JSON.stringify([...voltaDone]));
-}
-
 function fmtKm(m){
-  if(m==null)return "—";
   return m<1000?Math.round(m)+" m":(m/1000).toFixed(1)+" km"
 }
-
 function fmtTime(s){
-  if(s==null)return "—";
   const min=Math.max(1,Math.round(s/60));
-  if(min<60)return min+" min";
-  return Math.floor(min/60)+"h "+(min%60)+"min"
+  return min<60?min+" min":Math.floor(min/60)+"h "+(min%60)+"min"
 }
-
-
-function haversineLatLng(a,b){
-  const R=6371000, r=Math.PI/180;
-  const lat1=a[0]*r, lat2=b[0]*r;
-  const dlat=(b[0]-a[0])*r;
-  const dlon=(b[1]-a[1])*r;
-  const h=Math.sin(dlat/2)**2+
-    Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlon/2)**2;
-  return 2*R*Math.asin(Math.sqrt(h));
+function formatClock(sec){
+  let mins=Math.round(sec/60);
+  mins=((mins%1440)+1440)%1440;
+  return String(Math.floor(mins/60)).padStart(2,"0")+":"+
+         String(mins%60).padStart(2,"0")
 }
-
-function pathLengthMeters(path){
+function hav(a,b){
+  const R=6371000,r=Math.PI/180;
+  const p1=a[0]*r,p2=b[0]*r;
+  const dp=(b[0]-a[0])*r,dl=(b[1]-a[1])*r;
+  const h=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h))
+}
+function pathLength(path){
   let d=0;
-  for(let i=1;i<path.length;i++) d+=haversineLatLng(path[i-1],path[i]);
-  return d;
+  for(let i=1;i<path.length;i++)d+=hav(path[i-1],path[i]);
+  return d
+}
+function progressOnPath(path,target){
+  if(!path||path.length<2)return {along:0,total:0};
+  const lat0=target.lat*Math.PI/180;
+  const kx=111320*Math.cos(lat0),ky=110540;
+  let total=0,best=Infinity,bestAlong=0;
+
+  for(let i=1;i<path.length;i++){
+    const a=path[i-1],b=path[i];
+    const seg=hav(a,b);
+    const ax=(a[1]-target.lon)*kx,ay=(a[0]-target.lat)*ky;
+    const bx=(b[1]-target.lon)*kx,by=(b[0]-target.lat)*ky;
+    const vx=bx-ax,vy=by-ay,den=vx*vx+vy*vy;
+    let t=den?-(ax*vx+ay*vy)/den:0;
+    t=Math.max(0,Math.min(1,t));
+    const px=ax+t*vx,py=ay+t*vy;
+    const off=Math.sqrt(px*px+py*py);
+    if(off<best){best=off;bestAlong=total+seg*t}
+    total+=seg
+  }
+  return {along:bestAlong,total}
+}
+
+
+function cumulativePathDistances(path){
+  const out=[0];
+  let total=0;
+  for(let i=1;i<path.length;i++){
+    total+=hav(path[i-1],path[i]);
+    out.push(total);
+  }
+  return out;
 }
 
 /*
-  Retorna em que ponto do caminho a coordenada alvo é encontrada.
-  É usado para estimar quando o veículo passa pela Faz. Bandeirantes
-  sem obrigar a rota a entrar na propriedade.
+  Consulta o roteador usando TODOS os vértices da linha de referência.
+  Assim o tempo considera a velocidade de cada via no perfil de condução
+  (incluindo maxspeed quando cadastrado e classe/tipo de via como fallback),
+  sem substituir o desenho oficial mostrado no mapa.
 */
-function progressOnPath(path,target){
-  if(!path || path.length<2) return {along:0,total:0,offset:Infinity};
+async function loadFixedRouteStats(path, fallbackLength){
+  fixedRouteDistance=fallbackLength;
+  fixedRouteDuration=fallbackLength/FALLBACK_SPEED;
+  fixedLegDurations=[];
+  fixedGeoCum=cumulativePathDistances(path);
 
-  const lat0=target.lat*Math.PI/180;
-  const kx=111320*Math.cos(lat0);
-  const ky=110540;
+  const coords=path.map(p=>`${p[1]},${p[0]}`).join(";");
 
-  let cumulative=0;
-  let bestOffset=Infinity;
-  let bestAlong=0;
-  let total=0;
+  try{
+    const res=await fetch(
+      `https://router.project-osrm.org/route/v1/driving/${coords}`+
+      `?overview=false&steps=false`
+    );
+    const data=await res.json();
 
-  for(let i=1;i<path.length;i++){
-    const a=path[i-1], b=path[i];
-    const seg=haversineLatLng(a,b);
-    total+=seg;
-
-    const ax=(a[1]-target.lon)*kx;
-    const ay=(a[0]-target.lat)*ky;
-    const bx=(b[1]-target.lon)*kx;
-    const by=(b[0]-target.lat)*ky;
-
-    const vx=bx-ax, vy=by-ay;
-    const denom=vx*vx+vy*vy;
-    let t=denom>0 ? -(ax*vx+ay*vy)/denom : 0;
-    t=Math.max(0,Math.min(1,t));
-
-    const px=ax+t*vx;
-    const py=ay+t*vy;
-    const off=Math.sqrt(px*px+py*py);
-
-    if(off<bestOffset){
-      bestOffset=off;
-      bestAlong=cumulative+seg*t;
+    if(data.code!=="Ok" || !data.routes?.length){
+      throw new Error("speed-profile");
     }
 
-    cumulative+=seg;
-  }
+    const r=data.routes[0];
 
-  return {along:bestAlong,total,offset:bestOffset};
+    fixedRouteDistance=r.distance || fallbackLength;
+    fixedRouteDuration=r.duration || fallbackLength/FALLBACK_SPEED;
+    fixedLegDurations=(r.legs||[]).map(l=>l.duration||0);
+
+    $("status").textContent=
+      mode==="ida"
+        ?"IDA • tempo calculado pelas velocidades das vias"
+        :"VOLTA • tempo calculado pelas velocidades das vias";
+  }catch(e){
+    console.warn("Não foi possível carregar perfil de velocidade das vias.",e);
+
+    fixedRouteDistance=fallbackLength;
+    fixedRouteDuration=fallbackLength/FALLBACK_SPEED;
+
+    $("status").textContent=
+      mode==="ida"
+        ?"IDA • estimativa provisória"
+        :"VOLTA • estimativa provisória";
+  }
 }
 
-function formatClock(seconds){
-  let mins=Math.round(seconds/60);
-  mins=((mins%1440)+1440)%1440;
-  const h=Math.floor(mins/60);
-  const m=mins%60;
-  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
-}
+/*
+  Retorna o tempo acumulado no trecho fixo até determinada distância
+  percorrida sobre a linha. Isso permite calcular o horário de cada
+  passageiro usando velocidades diferentes em ruas/avenidas/rodovias.
+*/
+function fixedTimeAtDistance(targetDistance){
+  if(!fixedGeoCum.length) return targetDistance/FALLBACK_SPEED;
 
-function calculateIdaSchedule(){
-  const urbanTravelSec=REFERENCE_ROUTE_LENGTH/URBAN_SPEED_MPS;
-
-  let extDuration=extensionDuration;
-  if(!extDuration && extensionDistance){
-    // fallback: 60 km/h no trecho rodoviário, caso o serviço não dê duração
-    extDuration=extensionDistance/(60000/3600);
+  if(!fixedLegDurations.length){
+    const total=fixedGeoCum[fixedGeoCum.length-1]||1;
+    return fixedRouteDuration*Math.max(0,Math.min(1,targetDistance/total));
   }
 
-  const bandProgress=progressOnPath(extensionPath,P.bandeirantes);
-  const bandRatio=
-    bandProgress.total>0
-      ? Math.max(0,Math.min(1,bandProgress.along/bandProgress.total))
-      : 0.45;
+  let elapsed=0;
 
-  const bandTravelSec=extDuration*bandRatio;
+  for(let i=0;i<fixedGeoCum.length-1;i++){
+    const a=fixedGeoCum[i];
+    const b=fixedGeoCum[i+1];
+    const legTime=fixedLegDurations[i]||0;
 
-  const totalTravelSec=urbanTravelSec+extDuration;
-  const totalBoardingSec=IDA_ORDER.length*BOARDING_SEC;
-  const driverDeparture=ARRIVAL_TARGET_SEC-totalTravelSec-totalBoardingSec;
+    if(targetDistance>=b){
+      elapsed+=legTime;
+      continue;
+    }
 
-  const times={};
-  times.motorista=driverDeparture;
+    if(targetDistance<=a){
+      break;
+    }
 
-  // Paradas urbanas: tempo de viagem na linha + paradas já realizadas.
-  const urbanStops=[
-    P.david,P.natan,P.paulo,P.telcio,P.igor,P.patricia,P.andreia
-  ];
-
-  urbanStops.forEach((p,index)=>{
-    const travel=REF_STOP_DISTANCE[p.id]/URBAN_SPEED_MPS;
-    times[p.id]=driverDeparture+travel+(index*BOARDING_SEC);
-  });
-
-  // Faz. Bandeirantes: depois dos 7 embarques urbanos.
-  times.bandeirantes=
-    driverDeparture+
-    urbanTravelSec+
-    (7*BOARDING_SEC)+
-    bandTravelSec;
-
-  times.reunidas=ARRIVAL_TARGET_SEC;
-  scheduleTimes=times;
-
-  return times;
-}
-
-function renderIdaSchedule(){
-  const box=$("scheduleBox");
-  if(!box)return;
-
-  if(mode!=="ida"){
-    box.style.display="none";
-    return;
+    const frac=(targetDistance-a)/Math.max(1,b-a);
+    elapsed+=legTime*Math.max(0,Math.min(1,frac));
+    break;
   }
 
-  box.style.display="block";
-
-  const times=calculateIdaSchedule();
-  const rows=[
-    {id:"motorista",label:"Motorista",num:"S",cls:"driver"},
-    {id:"david",label:"David",num:"1"},
-    {id:"natan",label:"Natan",num:"2"},
-    {id:"paulo",label:"Paulo",num:"3"},
-    {id:"telcio",label:"Télcio",num:"4"},
-    {id:"igor",label:"Igor",num:"5"},
-    {id:"patricia",label:"Patrícia",num:"6"},
-    {id:"andreia",label:"Andreia",num:"7"},
-    {id:"bandeirantes",label:"Faz. Bandeirantes",num:"8"},
-    {id:"reunidas",label:"Chegada ao Grupo Reunidas",num:"F",cls:"office"}
-  ];
-
-  $("scheduleList").innerHTML=rows.map(r=>`
-    <div class="schedule-row ${r.cls||""}">
-      <div class="schedule-num">${r.num}</div>
-      <div class="schedule-name">${r.label}</div>
-      <div class="schedule-time">${formatClock(times[r.id])}</div>
-    </div>
-  `).join("");
+  return elapsed;
 }
 
 function pinIcon(label,cls=""){
   return L.divIcon({
     className:"",
     html:`<div class="pin ${cls}">${label}</div>`,
-    iconSize:[32,32],iconAnchor:[16,16]
+    iconSize:[30,30],iconAnchor:[15,15]
   })
 }
 
@@ -657,55 +456,43 @@ function clearRoute(){
   routeLayers.forEach(l=>map.removeLayer(l));
   routeLayers=[]
 }
-
 function clearMarkers(){
-  passengerMarkers.forEach(m=>map.removeLayer(m));
-  endpointMarkers.forEach(m=>map.removeLayer(m));
-  passengerMarkers=[];endpointMarkers=[]
+  markerLayers.forEach(m=>map.removeLayer(m));
+  markerLayers=[]
 }
-
-function rebuildMarkers(){
-  clearMarkers();
-
-  const start=mode==="ida"?DRIVER:OFFICE;
-  const end=mode==="ida"?OFFICE:DRIVER;
-
-  endpointMarkers.push(
-    L.marker([start.lat,start.lon],{icon:pinIcon("S","start")})
-      .addTo(map).bindPopup(`<b>Início</b><br>${start.name}`)
-  );
-
-  endpointMarkers.push(
-    L.marker([end.lat,end.lon],{icon:pinIcon("F","end")})
-      .addTo(map).bindPopup(`<b>Final</b><br>${end.name}`)
-  );
-
-  const done=activeDone();
-  activeOrder().forEach((p,i)=>{
-    passengerMarkers.push(
-      L.marker([p.lat,p.lon],{
-        icon:pinIcon(done.has(p.id)?"✓":String(i+1),done.has(p.id)?"done":"")
-      }).addTo(map).bindPopup(
-        `<b>${i+1}. ${p.name}</b><br>`+
-        (done.has(p.id)?(mode==="ida"?"Embarque concluído":"Desembarque concluído"):
-        (mode==="ida"?"Embarque":"Desembarque"))
-      )
-    )
-  })
-}
-
 function addPolyline(latlngs,color,weight=5,dash=null){
   const outline=L.polyline(latlngs,{
     weight:weight+4,color:"#fff",opacity:.82,lineCap:"round",lineJoin:"round"
   }).addTo(map);
-
   const line=L.polyline(latlngs,{
-    weight,color,opacity:1,lineCap:"round",lineJoin:"round",
-    dashArray:dash||null
+    weight,color,opacity:1,lineCap:"round",lineJoin:"round",dashArray:dash||null
   }).addTo(map);
-
   routeLayers.push(outline,line);
   return line
+}
+
+function rebuildMarkers(){
+  clearMarkers();
+  const order=mode==="ida"?IDA_ORDER:VOLTA_ORDER;
+  const start=mode==="ida"?DRIVER:OFFICE;
+  const end=mode==="ida"?OFFICE:DRIVER;
+
+  markerLayers.push(
+    L.marker([start.lat,start.lon],{icon:pinIcon("S","start")})
+      .addTo(map).bindPopup(`<b>Início</b><br>${start.name}`)
+  );
+
+  order.forEach((p,i)=>{
+    markerLayers.push(
+      L.marker([p.lat,p.lon],{icon:pinIcon(String(i+1))})
+        .addTo(map).bindPopup(`<b>${i+1}. ${p.name}</b>`)
+    )
+  });
+
+  markerLayers.push(
+    L.marker([end.lat,end.lon],{icon:pinIcon("F","end")})
+      .addTo(map).bindPopup(`<b>Final</b><br>${end.name}`)
+  )
 }
 
 async function routeExtension(points,color){
@@ -716,64 +503,39 @@ async function routeExtension(points,color){
     );
     const data=await res.json();
     if(data.code!=="Ok"||!data.routes?.length)throw new Error("route");
-
     const r=data.routes[0];
-    const ll=r.geometry.coordinates.map(c=>[c[1],c[0]]);
-    addPolyline(ll,color,5);
-
-    extensionPath=ll;
-    extensionDistance+=r.distance||0;
-    extensionDuration+=r.duration||0;
-    return ll;
+    extensionPath=r.geometry.coordinates.map(c=>[c[1],c[0]]);
+    extensionDistance=r.distance||0;
+    extensionDuration=r.duration||0;
+    addPolyline(extensionPath,color,5);
   }catch(e){
-    const ll=points.map(p=>[p.lat,p.lon]);
-    addPolyline(ll,color,4,"8 8");
-
-    extensionPath=ll;
-    const fallbackDistance=pathLengthMeters(ll);
-    extensionDistance+=fallbackDistance;
-    extensionDuration+=fallbackDistance/(60000/3600);
-
-    return ll;
+    extensionPath=points.map(p=>[p.lat,p.lon]);
+    extensionDistance=pathLength(extensionPath);
+    extensionDuration=extensionDistance/(60000/3600);
+    addPolyline(extensionPath,color,4,"8 8")
   }
 }
 
-async function drawFullRoute(fit=true){
+async function drawRoute(fit=true){
   clearRoute();
+  extensionPath=[];
   extensionDistance=0;
   extensionDuration=0;
-  extensionPath=[];
-
-  const color=mode==="ida"?"#1769aa":"#e56f00";
-
-  const ref=mode==="ida"
-    ? REFERENCE_ROUTE
-    : [...REFERENCE_ROUTE].reverse();
-
-  /*
-    A linha do rota é soberana no trecho urbano:
-    não é recalculada pelo OSRM.
-  */
-  const refLine=addPolyline(ref,color,6);
+  fixedRouteDistance=0;
+  fixedRouteDuration=0;
+  fixedLegDurations=[];
+  fixedGeoCum=[];
 
   if(mode==="ida"){
-    const refEnd=REFERENCE_ROUTE[REFERENCE_ROUTE.length-1];
-    const endPoint={lat:refEnd[0],lon:refEnd[1]};
-
-    // Depois do fim da linha: seguir direto ao Grupo Reunidas, passando pela região da Faz. Bandeirantes sem entrar.
-    await routeExtension([endPoint,OFFICE],color);
-
-    $("status").textContent=
-      "IDA • rota para o Grupo Reunidas";
+    await loadFixedRouteStats(IDA_ROUTE,IDA_ROUTE_LENGTH);
+    addPolyline(IDA_ROUTE,"#1769aa",6);
+    const end=IDA_ROUTE[IDA_ROUTE.length-1];
+    await routeExtension([{lat:end[0],lon:end[1]},OFFICE],"#1769aa");
   }else{
-    const refEnd=REFERENCE_ROUTE[REFERENCE_ROUTE.length-1];
-    const joinPoint={lat:refEnd[0],lon:refEnd[1]};
-
-    // Volta: Reunidas -> ponto de entrada na linha, passando pela região da Faz. Bandeirantes sem entrar.
-    await routeExtension([OFFICE,joinPoint],color);
-
-    $("status").textContent=
-      "VOLTA • rota de retorno";
+    await loadFixedRouteStats(VOLTA_ROUTE,VOLTA_ROUTE_LENGTH);
+    const start=VOLTA_ROUTE[0];
+    await routeExtension([OFFICE,{lat:start[0],lon:start[1]}],"#e56f00");
+    addPolyline(VOLTA_ROUTE,"#e56f00",6);
   }
 
   rebuildMarkers();
@@ -782,79 +544,85 @@ async function drawFullRoute(fit=true){
   if(fit)fitRoute()
 }
 
-function fitRoute(){
-  if(!routeLayers.length)return;
-  const group=L.featureGroup(routeLayers);
-  if(group.getBounds().isValid()){
-    map.fitBounds(group.getBounds(),{
-      paddingTopLeft:[20,105],
-      paddingBottomRight:[20,220]
-    })
-  }
-}
-
 function render(){
-  /*
-    Comprimento da rota vem diretamente do rota.
-    Para tempo urbano, usa-se estimativa média de 35 km/h.
-  */
-  const urbanTime=REFERENCE_ROUTE_LENGTH/(35000/3600);
-  const totalDistance=REFERENCE_ROUTE_LENGTH+extensionDistance;
-  const totalDuration=urbanTime+extensionDuration;
+  const fallbackLen=mode==="ida"?IDA_ROUTE_LENGTH:VOLTA_ROUTE_LENGTH;
+
+  const fixedLen=fixedRouteDistance || fallbackLen;
+  const fixedTime=fixedRouteDuration || (fallbackLen/FALLBACK_SPEED);
+
+  const totalDistance=fixedLen+extensionDistance;
+  const totalDuration=fixedTime+extensionDuration;
 
   $("km").textContent=fmtKm(totalDistance);
   $("tempo").textContent=fmtTime(totalDuration);
-renderIdaSchedule();
 
   $("modeIda").classList.toggle("active",mode==="ida");
   $("modeVolta").classList.toggle("active",mode==="volta");
 
-  $("modeText").textContent="Modo: "+mode;
-
-  const order=activeOrder();
+  const order=mode==="ida"?IDA_ORDER:VOLTA_ORDER;
   $("routeSeq").innerHTML=
-    `<b>${mode==="ida"?"Sequência da ida":"Sequência da volta"}:</b> `+
-    order.map((p,i)=>`${i+1}. ${p.name}`).join(" → ")+
-    ` <span class="ref-badge">rota</span>`;
+    `<b>${mode==="ida"?"IDA":"VOLTA"}:</b> `+
+    order.map((p,i)=>`${i+1}. ${p.name}`).join(" → ");
 
-  $("nextLabel").textContent=
-    mode==="ida"?"PRÓXIMO EMBARQUE":"PRÓXIMO DESEMBARQUE";
+  renderSchedule(totalDuration)
+}
 
-  $("served").textContent=mode==="ida"?"Embarcou":"Desembarcou";
-  $("served").className="btn "+(mode==="ida"?"green":"orange");
+function renderSchedule(totalDuration){
+  const box=$("scheduleBox");
+  if(mode!=="ida"){
+    box.style.display="none";
+    return
+  }
+  box.style.display="block";
 
-  const done=activeDone();
-  $("progressText").textContent=`${done.size} de ${order.length} concluídos`;
+  const driverDeparture=
+    ARRIVAL_SEC-totalDuration-(IDA_ORDER.length*STOP_SEC);
 
-  const rem=remaining();
-  if(rem.length){
-    const first=rem[0];
-    const n=order.findIndex(p=>p.id===first.id)+1;
-    $("nextName").textContent=`${n}. ${first.name}`;
-    $("nextMeta").textContent=
-      first.id==="bandeirantes"
-      ?"Passar pela Faz. Bandeirantes sem entrar; seguir direto pela via principal."
-      :"Seguindo a rota definida.";
-    $("served").disabled=false;
-  }else{
-    $("nextName").textContent=mode==="ida"?"Grupo Reunidas":"Motorista";
-    $("nextMeta").textContent=
-      mode==="ida"?"Todos os embarques concluídos.":"Todos os desembarques concluídos.";
-    $("served").disabled=true;
+  let bandSec=totalDuration;
+  if(extensionPath.length>1){
+    const pr=progressOnPath(extensionPath,P.bandeirantes);
+    const extRatio=pr.total?Math.max(0,Math.min(1,pr.along/pr.total)):0.5;
+    bandSec=fixedRouteDuration+(extensionDuration*extRatio)
+  }
+
+  const rows=[
+    ["S","Motorista",driverDeparture,"driver"],
+    ["1","David",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.david)+0*STOP_SEC,""],
+    ["2","Natan",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.natan)+1*STOP_SEC,""],
+    ["3","Paulo",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.paulo)+2*STOP_SEC,""],
+    ["4","Télcio",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.telcio)+3*STOP_SEC,""],
+    ["5","Igor",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.igor)+4*STOP_SEC,""],
+    ["6","Andreia",driverDeparture+fixedTimeAtDistance(IDA_STOP_DIST.andreia)+5*STOP_SEC,""],
+    ["7","Faz. Bandeirantes",driverDeparture+bandSec+6*STOP_SEC,""],
+    ["F","Grupo Reunidas",ARRIVAL_SEC,"office"]
+  ];
+
+  $("scheduleList").innerHTML=rows.map(r=>`
+    <div class="schedule-row ${r[3]}">
+      <div class="schedule-num">${r[0]}</div>
+      <div>${r[1]}</div>
+      <div class="schedule-time">${formatClock(r[2])}</div>
+    </div>
+  `).join("")
+}
+
+function fitRoute(){
+  if(!routeLayers.length)return;
+  const g=L.featureGroup(routeLayers);
+  if(g.getBounds().isValid()){
+    map.fitBounds(g.getBounds(),{
+      paddingTopLeft:[20,90],paddingBottomRight:[20,170]
+    })
   }
 }
 
 function activateGPS(){
   if(!window.isSecureContext||location.protocol==="content:"||location.protocol==="file:"){
-    $("gpsNote").textContent="GPS bloqueado: abra pelo endereço HTTPS do GitHub Pages.";
+    $("gpsNote").textContent="Abra pelo endereço HTTPS do GitHub Pages para usar o GPS.";
     $("gps").textContent="GPS requer HTTPS";
     return
   }
-
-  if(!navigator.geolocation){
-    $("gpsNote").textContent="Geolocalização indisponível neste navegador.";
-    return
-  }
+  if(!navigator.geolocation)return;
 
   if(watchId!==null)navigator.geolocation.clearWatch(watchId);
 
@@ -874,103 +642,102 @@ function activateGPS(){
         }).addTo(map).bindPopup("<b>Sua localização atual</b>");
 
         accuracyCircle=L.circle(ll,{
-          radius:pos.coords.accuracy||15,weight:1,opacity:.4,
-          fillOpacity:.08,color:"#1677ff"
-        }).addTo(map);
+          radius:pos.coords.accuracy||15,weight:1,opacity:.35,
+          fillOpacity:.06,color:"#1677ff"
+        }).addTo(map)
       }else{
         driverMarker.setLatLng(ll);
         accuracyCircle.setLatLng(ll).setRadius(pos.coords.accuracy||15)
       }
 
-      $("gps").textContent="GPS ativo";
-      $("gpsNote").textContent=
-        `Localização ativa • precisão aproximada ${Math.round(pos.coords.accuracy)} m`;
+      $("gps").textContent="GPS ativo"
     },
-    err=>{
-      let msg="Não foi possível acessar a localização.";
-      if(err.code===1)msg="Permissão de localização negada no navegador.";
-      if(err.code===2)msg="O celular não conseguiu determinar a posição.";
-      if(err.code===3)msg="Tempo esgotado ao obter a localização.";
-      $("gpsNote").textContent=msg
-    },
+    ()=>{$("gpsNote").textContent="Não foi possível acessar a localização."},
     {enableHighAccuracy:true,maximumAge:3000,timeout:15000}
   )
 }
 
+function googleMaps(){
+  const base="https://www.google.com/maps/dir/?api=1";
+  let origin,destination,waypoints=[];
+
+  if(mode==="ida"){
+    origin=`${DRIVER.lat},${DRIVER.lon}`;
+    destination=`${OFFICE.lat},${OFFICE.lon}`;
+
+    waypoints=[
+      `${P.david.lat},${P.david.lon}`,
+      `${IDA_GMAP_SHAPE[0][0]},${IDA_GMAP_SHAPE[0][1]}`,
+      `${IDA_GMAP_SHAPE[1][0]},${IDA_GMAP_SHAPE[1][1]}`,
+      `${IDA_GMAP_SHAPE[2][0]},${IDA_GMAP_SHAPE[2][1]}`,
+      `${P.natan.lat},${P.natan.lon}`,
+      `${P.paulo.lat},${P.paulo.lon}`,
+      `${P.telcio.lat},${P.telcio.lon}`,
+      `${P.igor.lat},${P.igor.lon}`,
+      `${P.andreia.lat},${P.andreia.lon}`
+    ];
+  }else{
+    origin=`${OFFICE.lat},${OFFICE.lon}`;
+    destination=`${DRIVER.lat},${DRIVER.lon}`;
+
+    waypoints=[
+      `${P.andreia.lat},${P.andreia.lon}`,
+      `${P.igor.lat},${P.igor.lon}`,
+      `${P.telcio.lat},${P.telcio.lon}`,
+      `${P.paulo.lat},${P.paulo.lon}`,
+      `${P.natan.lat},${P.natan.lon}`,
+      `${VOLTA_GMAP_SHAPE[0][0]},${VOLTA_GMAP_SHAPE[0][1]}`,
+      `${VOLTA_GMAP_SHAPE[1][0]},${VOLTA_GMAP_SHAPE[1][1]}`,
+      `${VOLTA_GMAP_SHAPE[2][0]},${VOLTA_GMAP_SHAPE[2][1]}`,
+      `${P.david.lat},${P.david.lon}`
+    ];
+  }
+
+  const url=
+    base+
+    `&origin=${encodeURIComponent(origin)}`+
+    `&destination=${encodeURIComponent(destination)}`+
+    `&travelmode=driving`+
+    `&waypoints=${encodeURIComponent(waypoints.join("|"))}`;
+
+  window.open(url,"_blank")
+}
+
 async function setMode(newMode){
   mode=newMode;
-  saveState();
-  await drawFullRoute(true)
+  localStorage.setItem("reunidas_modo_duas_rotas",mode);
+  await drawRoute(true)
 }
 
 $("modeIda").onclick=()=>setMode("ida");
 $("modeVolta").onclick=()=>setMode("volta");
-
 $("zin").onclick=()=>map.zoomIn();
 $("zout").onclick=()=>map.zoomOut();
-
 $("center").onclick=()=>{
   if(currentPosition)map.setView([currentPosition.lat,currentPosition.lon],17);
   else {
-    const s=mode==="ida"?DRIVER:OFFICE;
-    map.setView([s.lat,s.lon],16)
+    const p=mode==="ida"?DRIVER:OFFICE;
+    map.setView([p.lat,p.lon],16)
   }
 };
-
 $("fit").onclick=fitRoute;
 $("gps").onclick=activateGPS;
-$("recalc").onclick=()=>drawFullRoute(false);
+$("maps").onclick=googleMaps;
 
-$("served").onclick=async()=>{
-  const rem=remaining();
-  if(!rem.length)return;
-  activeDone().add(rem[0].id);
-  saveState();
-  rebuildMarkers();
-  render()
+const panelToggle=$("panelToggle");
+panelToggle.onclick=()=>{
+  document.body.classList.toggle("panel-collapsed");
+  panelToggle.textContent=
+    document.body.classList.contains("panel-collapsed")?"⌃":"⌄";
+  setTimeout(()=>map.invalidateSize(false),80)
 };
-
-$("maps").onclick=()=>{
-  /*
-    Google Maps é apenas navegação auxiliar.
-    O traçado oficial continua sendo a linha do rota exibida no HTML.
-  */
-  const order=activeOrder().filter(p=>p.id!=="bandeirantes");
-  const s=mode==="ida"?DRIVER:OFFICE;
-  const e=mode==="ida"?OFFICE:DRIVER;
-
-  let url=
-    `https://www.google.com/maps/dir/?api=1`+
-    `&origin=${encodeURIComponent(s.lat+","+s.lon)}`+
-    `&destination=${encodeURIComponent(e.lat+","+e.lon)}`+
-    `&travelmode=driving`;
-
-  // Faz. Bandeirantes permanece visível no HTML, mas não é enviada
-  // como waypoint ao Google Maps para evitar a entrada e retorno.
-  const mids=order.map(p=>p.lat+","+p.lon);
-  if(mids.length)url+=`&waypoints=${encodeURIComponent(mids.join("|"))}`;
-
-  window.open(url,"_blank")
-};
-
-document.querySelector(".title-card").ondblclick=async()=>{
-  if(confirm(mode==="ida"?"Reiniciar embarques da ida?":"Reiniciar desembarques da volta?")){
-    activeDone().clear();
-    saveState();
-    rebuildMarkers();
-    render()
-  }
-};
-
 
 function tryAutoGPS(){
   if(window.isSecureContext &&
      location.protocol!=="content:" &&
      location.protocol!=="file:" &&
      navigator.geolocation){
-    // Inicia o acompanhamento em tempo real automaticamente.
-    // Se o navegador exigir autorização, exibirá o pedido de permissão.
-    setTimeout(()=>activateGPS(),700);
+    setTimeout(()=>activateGPS(),700)
   }
 }
 
@@ -984,26 +751,12 @@ function fixSize(){
 window.addEventListener("load",()=>{
   fixSize();
   setTimeout(fixSize,700);
-  setTimeout(fixSize,1500);
-  tryAutoGPS();
+  tryAutoGPS()
 });
 window.addEventListener("resize",fixSize);
 window.addEventListener("orientationchange",()=>setTimeout(fixSize,400));
 
-
-const panelToggle=document.getElementById("panelToggle");
-if(panelToggle){
-  panelToggle.onclick=()=>{
-    document.body.classList.toggle("panel-collapsed");
-    panelToggle.textContent=
-      document.body.classList.contains("panel-collapsed") ? "⌃" : "⌄";
-    setTimeout(()=>map.invalidateSize(false),80);
-  };
-}
-
-rebuildMarkers();
-render();
-drawFullRoute(true);
+drawRoute(true);
 </script>
 </body>
 </html>
