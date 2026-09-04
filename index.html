@@ -187,7 +187,7 @@ html,body{
   }
 
   .metric{
-    display:none
+    display:block
   }
 
   .tools{
@@ -231,166 +231,74 @@ html,body{
     display:none
   }
 
-  .mobile-metrics{
-    display:grid
-  }
+  
 
-  .schedule{
-    margin-bottom:5px;
-    border-radius:8px
-  }
 
-  .schedule summary{
-    padding:6px 7px;
-    font-size:9px
-  }
-
-  .schedule-arrival{
-    font-size:8px;
-    padding:2px 5px
-  }
-
-  .schedule-body{
-    padding:0 6px 5px
-  }
-
-  .schedule-row{
-    grid-template-columns:20px 1fr auto;
-    gap:4px;
-    padding:3px 0;
-    font-size:9px
-  }
-
-  .schedule-num{
-    width:18px;
-    height:18px;
-    font-size:8px
-  }
-
-  .schedule-time{
-    font-size:10px
-  }
-
-  .schedule-note{
-    display:none
-  }
-
-  .eyebrow{
-    font-size:8px;
-    letter-spacing:.05em
-  }
-
-  .next{
-    font-size:15px;
-    margin-top:0;
-    line-height:1.05
-  }
-
-  .nextmeta{
-    display:none
-  }
-
-  .actions{
-    gap:4px;
-    margin-top:6px
-  }
-
-  .btn{
-    min-height:34px;
-    border-radius:8px;
-    font-size:9px;
-    padding:2px 3px
-  }
-
-  .progress{
-    margin-top:4px;
-    font-size:8px
-  }
-
-  .gps-note{
-    display:none
-  }
-
-  .pin{
-    width:28px;
-    height:28px;
-    font-size:10px
-  }
-}
-
-@media(min-width:700px){.bottom{width:500px;right:auto}.top{max-width:760px}}
-
+/* Cabeçalho móvel: título + distância + estimativa na mesma faixa superior */
 @media(max-width:600px){
-  #panelToggle{
-    display:block!important
+  .top{
+    top:5px;
+    left:5px;
+    right:5px;
+    gap:3px;
+    align-items:stretch;
   }
 
-  body.panel-collapsed .bottom{
-    display:none
+  .top .card{
+    border-radius:9px;
+    padding:5px 6px;
+    box-shadow:0 2px 9px rgba(0,0,0,.22);
   }
 
-  body.panel-collapsed #panelToggle{
-    bottom:8px
+  .title-card{
+    flex:1 1 auto;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
   }
-}
 
+  .title{
+    font-size:10.5px;
+    line-height:1.05;
+    white-space:nowrap;
+  }
 
-.mobile-metrics{
-  display:none;
-  grid-template-columns:1fr 1fr;
-  gap:4px;
-  margin-bottom:5px
-}
-.mobile-metrics div{
-  background:#eef4f8;
-  border-radius:8px;
-  padding:4px 6px;
-  text-align:center
-}
-.mobile-metrics span{
-  display:block;
-  font-size:8px;
-  color:#667480;
-  line-height:1
-}
-.mobile-metrics b{
-  display:block;
-  margin-top:2px;
-  font-size:11px;
-  color:#10263a;
-  line-height:1
-}
+  .sub{
+    margin-top:2px;
+    font-size:7px;
+    line-height:1;
+    max-width:100%;
+  }
 
+  .metric{
+    display:flex !important;
+    flex:0 0 54px;
+    min-width:54px;
+    padding:4px 3px !important;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
 
-.mobile-metrics{
-  display:none;
-  grid-template-columns:1fr 1fr;
-  gap:4px;
-  margin:0 0 5px 0;
-}
-.mobile-metrics div{
-  background:#eef4f8;
-  border-radius:7px;
-  padding:4px 6px;
-  text-align:center;
-}
-.mobile-metrics span{
-  display:block;
-  font-size:8px;
-  color:#667480;
-  line-height:1;
-}
-.mobile-metrics b{
-  display:block;
-  margin-top:2px;
-  font-size:11px;
-  color:#10263a;
-  line-height:1.05;
-}
+  .metric b{
+    display:block;
+    font-size:10px;
+    line-height:1.05;
+    white-space:nowrap;
+  }
 
-@media(max-width:600px){
-  .mobile-metrics{
-    display:grid !important;
+  .metric span{
+    display:block;
+    margin-top:1px;
+    font-size:6.2px;
+    line-height:1;
+    white-space:nowrap;
+  }
+
+  .tools{
+    top:58px;
   }
 }
 
@@ -442,14 +350,7 @@ style="
   </div>
 
   <div class="route-seq" id="routeSeq"></div>
-
-  <div class="mobile-metrics">
-    <div><span>Distância</span><b id="mobileKm">—</b></div>
-    <div><span>Tempo de trajeto</span><b id="mobileTempo">—</b></div>
-  </div>
-
-
-  <details class="schedule" id="scheduleBox">
+<details class="schedule" id="scheduleBox">
     <summary>
       <span>Horários da IDA para chegar às 07:00</span>
       <span class="schedule-arrival">Chegada 07:00</span>
@@ -903,13 +804,7 @@ function render(){
 
   $("km").textContent=fmtKm(totalDistance);
   $("tempo").textContent=fmtTime(totalDuration);
-
-  const mobileKm=document.getElementById("mobileKm");
-  const mobileTempo=document.getElementById("mobileTempo");
-  if(mobileKm) mobileKm.textContent=fmtKm(totalDistance);
-  if(mobileTempo) mobileTempo.textContent=fmtTime(totalDuration);
-
-  renderIdaSchedule();
+renderIdaSchedule();
 
   $("modeIda").classList.toggle("active",mode==="ida");
   $("modeVolta").classList.toggle("active",mode==="volta");
