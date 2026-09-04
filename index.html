@@ -50,7 +50,8 @@ html,body{
 .bottom{
   position:fixed;z-index:1000;left:10px;right:10px;bottom:10px;
   background:rgba(255,255,255,.97);border-radius:18px;padding:12px;
-  box-shadow:0 4px 20px rgba(0,0,0,.28)
+  box-shadow:0 4px 20px rgba(0,0,0,.28);
+  max-height:68vh;overflow-y:auto
 }
 .mode{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
 .mode button{
@@ -69,6 +70,41 @@ html,body{
 .ref-badge{
   display:inline-block;margin-left:4px;padding:2px 6px;border-radius:999px;
   background:#dff3e8;color:#176842;font-weight:800
+}
+
+
+.schedule{
+  margin-bottom:9px;border:1px solid #d9e4ec;border-radius:12px;
+  background:#f7fafc;overflow:hidden
+}
+.schedule summary{
+  cursor:pointer;list-style:none;padding:9px 10px;
+  font-size:11px;font-weight:800;color:#123a5a;
+  display:flex;align-items:center;justify-content:space-between;gap:8px
+}
+.schedule summary::-webkit-details-marker{display:none}
+.schedule-arrival{
+  flex:none;background:#1769aa;color:#fff;border-radius:999px;
+  padding:3px 7px;font-size:10px
+}
+.schedule-body{padding:0 9px 8px}
+.schedule-row{
+  display:grid;grid-template-columns:24px 1fr auto;
+  gap:7px;align-items:center;padding:5px 0;
+  border-top:1px solid #e6edf2;font-size:11px
+}
+.schedule-num{
+  width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;background:#e5eef5;
+  color:#234b68;font-weight:800;font-size:10px
+}
+.schedule-row.driver .schedule-num{background:#2f8f5b;color:#fff}
+.schedule-row.office .schedule-num{background:#10263a;color:#fff}
+.schedule-name{color:#334d60}
+.schedule-time{font-size:12px;font-weight:900;color:#10263a}
+.schedule-note{
+  padding-top:6px;border-top:1px solid #e6edf2;
+  font-size:9px;line-height:1.35;color:#72818d
 }
 
 .eyebrow{font-size:10px;font-weight:bold;letter-spacing:.08em;color:#1769aa}
@@ -139,6 +175,21 @@ html,body{
 
   <div class="route-seq" id="routeSeq"></div>
 
+  <details class="schedule" id="scheduleBox" open>
+    <summary>
+      <span>Horários da IDA para chegar às 07:00</span>
+      <span class="schedule-arrival">Chegada 07:00</span>
+    </summary>
+    <div class="schedule-body">
+      <div id="scheduleList">Calculando horários…</div>
+      <div class="schedule-note">
+        Horários estimados pelo percurso definido. Inclui 1 minuto de parada em cada embarque.
+        Trânsito, chuva e outras condições podem alterar o tempo real.
+      </div>
+    </div>
+  </details>
+
+
   <div class="eyebrow" id="nextLabel">PRÓXIMO EMBARQUE</div>
   <div class="next" id="nextName">Calculando…</div>
   <div class="nextmeta" id="nextMeta">Aguarde.</div>
@@ -156,7 +207,7 @@ html,body{
   </div>
 
   <div class="gps-note" id="gpsNote">
-    O trecho urbano azul é exatamente a linha enviada no SHP. Na Faz. Bandeirantes, a rota passa direto pela via principal, sem entrar.
+    O trecho urbano azul é exatamente a linha enviada no SHP. Na IDA, os horários são calculados para chegada ao escritório às 07:00. Na Faz. Bandeirantes, a rota passa direto pela via principal, sem entrar.
   </div>
 </div>
 
@@ -182,6 +233,36 @@ const VOLTA_ORDER=[...IDA_ORDER].reverse();
 /* GEOMETRIA EXATA DO SHP ENVIADO PELO USUÁRIO */
 const REFERENCE_ROUTE=[[-17.998080769648205,-49.363059238391465],[-17.999649246712718,-49.36093829292004],[-17.999381550893332,-49.359907553064765],[-18.000927394388885,-49.35807204324555],[-18.000991490046104,-49.357957076107844],[-18.000916083388127,-49.35750910070922],[-18.002005706462015,-49.34391522777182],[-18.002066031418167,-49.343498967445655],[-18.002288479515634,-49.34305495643107],[-18.00282009162871,-49.342591123496184],[-18.003498743060785,-49.342460298822246],[-18.005086023154153,-49.342484085126614],[-18.011359598407857,-49.34270609063392],[-18.011389759287937,-49.34063668215525],[-18.01301466907205,-49.34007770400297],[-18.01175168944642,-49.33605385418335],[-18.011555644036193,-49.3354433390383],[-18.011046678972274,-49.333817941574225],[-18.011668747184093,-49.33358007853071],[-18.013648040520827,-49.339831912191315],[-18.01482806577853,-49.339395829944856],[-18.0149185466222,-49.3392768984231],[-18.01503164761147,-49.339268969654974],[-18.015061807863013,-49.33940772309704],[-18.014877076241294,-49.33955044092314],[-18.013908174563422,-49.342218471394695],[-18.01370836149245,-49.34280520023539],[-18.013862933887967,-49.34297566874993],[-18.013510433227037,-49.348398946142304],[-18.013367170724788,-49.35169731367916],[-18.013325699978722,-49.351978784947335],[-18.01341241152756,-49.352153217845924],[-18.01307310522367,-49.35853191179645],[-18.01306179500229,-49.35863102139792],[-18.013122116174596,-49.35868255839068],[-18.013299309498844,-49.358615163861685],[-18.014245594234918,-49.3586904871588],[-18.02005514331274,-49.35894024335449],[-18.019866646999137,-49.368133649986746],[-18.02276946785971,-49.36823672397227],[-18.026803178440804,-49.368387370566516],[-18.029200742062034,-49.36932296520438],[-18.0331513731435,-49.36868866375499],[-18.03309859812184,-49.36972733237837],[-18.033976923208034,-49.369790762523316],[-18.033950535822974,-49.37009602009583],[-18.033935457315444,-49.37088889690759],[-18.036415854429784,-49.37098800650905],[-18.036325384632693,-49.37469470560399],[-18.037120763338958,-49.37473831382863],[-18.03710568510307,-49.37593952219842],[-18.03289126752637,-49.375741302995486],[-18.027425191007538,-49.375558941328784],[-18.016877068495177,-49.37518628922727],[-18.016730038735144,-49.37511493031422],[-18.016865758517998,-49.372621332741254],[-18.015632966651843,-49.37264908342966],[-18.01254906420382,-49.37264908342968],[-18.01294869274853,-49.362373399949384],[-18.00861305162678,-49.362183109514554],[-18.007587562650784,-49.36215139444208],[-18.00695416942026,-49.36216725197831],[-18.00591358988618,-49.36199281907974],[-18.00564213334529,-49.36312663292054],[-18.004993652138886,-49.36308698907995],[-18.004978571152222,-49.362825339732076],[-18.003809790760723,-49.36263504929726],[-18.003244249079856,-49.362658835601614],[-18.0025278936798,-49.362888769877024],[-18.002739030310746,-49.363546857630766],[-18.000280781014393,-49.36439523581935],[-18.000235536841135,-49.36592548806602],[-17.998893287753596,-49.365798627776144],[-17.996276626735423,-49.365830342848625],[-17.995703520004287,-49.365378403065925],[-17.99562811108523,-49.365188112631095],[-17.995462211349864,-49.365085038645574],[-17.995303852366003,-49.36515639755862],[-17.995228443276073,-49.36542597567463],[-17.993557181046455,-49.36784226775843],[-17.990499286323796,-49.37174322167223]];
 const REFERENCE_ROUTE_LENGTH=19229.385;
+
+/*
+  HORÁRIO-ALVO DA IDA
+  Chegada ao Grupo Reunidas: 07:00.
+  Para o trecho urbano da linha SHP, o tempo é estimado a 35 km/h.
+  A extensão até o escritório usa a duração retornada pelo roteador.
+  Considera 1 minuto parado em cada um dos 8 embarques.
+*/
+const ARRIVAL_TARGET_SEC = 7 * 3600;
+const BOARDING_SEC = 60;
+const URBAN_SPEED_MPS = 35000 / 3600;
+
+/*
+  Distância acumulada de cada parada sobre a linha SHP,
+  calculada por projeção geométrica no arquivo enviado.
+*/
+const REF_STOP_DISTANCE = {
+  motorista: 0,
+  david: 4209.134,
+  natan: 10908.656,
+  paulo: 11692.292,
+  telcio: 14498.608,
+  igor: 16369.680,
+  patricia: 17419.828,
+  andreia: 18329.382
+};
+
+let extensionPath = [];
+let scheduleTimes = {};
+
 
 let mode=localStorage.getItem("reunidas_mode_shp")||"ida";
 let idaDone=new Set(JSON.parse(localStorage.getItem("reunidas_ida_done_shp")||"[]"));
@@ -234,6 +315,159 @@ function fmtTime(s){
   const min=Math.max(1,Math.round(s/60));
   if(min<60)return min+" min";
   return Math.floor(min/60)+"h "+(min%60)+"min"
+}
+
+
+function haversineLatLng(a,b){
+  const R=6371000, r=Math.PI/180;
+  const lat1=a[0]*r, lat2=b[0]*r;
+  const dlat=(b[0]-a[0])*r;
+  const dlon=(b[1]-a[1])*r;
+  const h=Math.sin(dlat/2)**2+
+    Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+
+function pathLengthMeters(path){
+  let d=0;
+  for(let i=1;i<path.length;i++) d+=haversineLatLng(path[i-1],path[i]);
+  return d;
+}
+
+/*
+  Retorna em que ponto do caminho a coordenada alvo é encontrada.
+  É usado para estimar quando o veículo passa pela Faz. Bandeirantes
+  sem obrigar a rota a entrar na propriedade.
+*/
+function progressOnPath(path,target){
+  if(!path || path.length<2) return {along:0,total:0,offset:Infinity};
+
+  const lat0=target.lat*Math.PI/180;
+  const kx=111320*Math.cos(lat0);
+  const ky=110540;
+
+  let cumulative=0;
+  let bestOffset=Infinity;
+  let bestAlong=0;
+  let total=0;
+
+  for(let i=1;i<path.length;i++){
+    const a=path[i-1], b=path[i];
+    const seg=haversineLatLng(a,b);
+    total+=seg;
+
+    const ax=(a[1]-target.lon)*kx;
+    const ay=(a[0]-target.lat)*ky;
+    const bx=(b[1]-target.lon)*kx;
+    const by=(b[0]-target.lat)*ky;
+
+    const vx=bx-ax, vy=by-ay;
+    const denom=vx*vx+vy*vy;
+    let t=denom>0 ? -(ax*vx+ay*vy)/denom : 0;
+    t=Math.max(0,Math.min(1,t));
+
+    const px=ax+t*vx;
+    const py=ay+t*vy;
+    const off=Math.sqrt(px*px+py*py);
+
+    if(off<bestOffset){
+      bestOffset=off;
+      bestAlong=cumulative+seg*t;
+    }
+
+    cumulative+=seg;
+  }
+
+  return {along:bestAlong,total,offset:bestOffset};
+}
+
+function formatClock(seconds){
+  let mins=Math.round(seconds/60);
+  mins=((mins%1440)+1440)%1440;
+  const h=Math.floor(mins/60);
+  const m=mins%60;
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+}
+
+function calculateIdaSchedule(){
+  const urbanTravelSec=REFERENCE_ROUTE_LENGTH/URBAN_SPEED_MPS;
+
+  let extDuration=extensionDuration;
+  if(!extDuration && extensionDistance){
+    // fallback: 60 km/h no trecho rodoviário, caso o serviço não dê duração
+    extDuration=extensionDistance/(60000/3600);
+  }
+
+  const bandProgress=progressOnPath(extensionPath,P.bandeirantes);
+  const bandRatio=
+    bandProgress.total>0
+      ? Math.max(0,Math.min(1,bandProgress.along/bandProgress.total))
+      : 0.45;
+
+  const bandTravelSec=extDuration*bandRatio;
+
+  const totalTravelSec=urbanTravelSec+extDuration;
+  const totalBoardingSec=IDA_ORDER.length*BOARDING_SEC;
+  const driverDeparture=ARRIVAL_TARGET_SEC-totalTravelSec-totalBoardingSec;
+
+  const times={};
+  times.motorista=driverDeparture;
+
+  // Paradas urbanas: tempo de viagem na linha + paradas já realizadas.
+  const urbanStops=[
+    P.david,P.natan,P.paulo,P.telcio,P.igor,P.patricia,P.andreia
+  ];
+
+  urbanStops.forEach((p,index)=>{
+    const travel=REF_STOP_DISTANCE[p.id]/URBAN_SPEED_MPS;
+    times[p.id]=driverDeparture+travel+(index*BOARDING_SEC);
+  });
+
+  // Faz. Bandeirantes: depois dos 7 embarques urbanos.
+  times.bandeirantes=
+    driverDeparture+
+    urbanTravelSec+
+    (7*BOARDING_SEC)+
+    bandTravelSec;
+
+  times.reunidas=ARRIVAL_TARGET_SEC;
+  scheduleTimes=times;
+
+  return times;
+}
+
+function renderIdaSchedule(){
+  const box=$("scheduleBox");
+  if(!box)return;
+
+  if(mode!=="ida"){
+    box.style.display="none";
+    return;
+  }
+
+  box.style.display="block";
+
+  const times=calculateIdaSchedule();
+  const rows=[
+    {id:"motorista",label:"Motorista",num:"S",cls:"driver"},
+    {id:"david",label:"David",num:"1"},
+    {id:"natan",label:"Natan",num:"2"},
+    {id:"paulo",label:"Paulo",num:"3"},
+    {id:"telcio",label:"Télcio",num:"4"},
+    {id:"igor",label:"Igor",num:"5"},
+    {id:"patricia",label:"Patrícia",num:"6"},
+    {id:"andreia",label:"Andreia",num:"7"},
+    {id:"bandeirantes",label:"Faz. Bandeirantes",num:"8"},
+    {id:"reunidas",label:"Chegada ao Grupo Reunidas",num:"F",cls:"office"}
+  ];
+
+  $("scheduleList").innerHTML=rows.map(r=>`
+    <div class="schedule-row ${r.cls||""}">
+      <div class="schedule-num">${r.num}</div>
+      <div class="schedule-name">${r.label}</div>
+      <div class="schedule-time">${formatClock(times[r.id])}</div>
+    </div>
+  `).join("");
 }
 
 function pinIcon(label,cls=""){
@@ -312,12 +546,19 @@ async function routeExtension(points,color){
     const ll=r.geometry.coordinates.map(c=>[c[1],c[0]]);
     addPolyline(ll,color,5);
 
+    extensionPath=ll;
     extensionDistance+=r.distance||0;
     extensionDuration+=r.duration||0;
     return ll;
   }catch(e){
     const ll=points.map(p=>[p.lat,p.lon]);
     addPolyline(ll,color,4,"8 8");
+
+    extensionPath=ll;
+    const fallbackDistance=pathLengthMeters(ll);
+    extensionDistance+=fallbackDistance;
+    extensionDuration+=fallbackDistance/(60000/3600);
+
     return ll;
   }
 }
@@ -326,6 +567,7 @@ async function drawFullRoute(fit=true){
   clearRoute();
   extensionDistance=0;
   extensionDuration=0;
+  extensionPath=[];
 
   const color=mode==="ida"?"#1769aa":"#e56f00";
 
@@ -387,6 +629,8 @@ function render(){
 
   $("km").textContent=fmtKm(totalDistance);
   $("tempo").textContent=fmtTime(totalDuration);
+
+  renderIdaSchedule();
 
   $("modeIda").classList.toggle("active",mode==="ida");
   $("modeVolta").classList.toggle("active",mode==="volta");
